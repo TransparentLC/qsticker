@@ -1,0 +1,30 @@
+diff --git a/index.d.ts b/index.d.ts
+index 2dc1b9d73dbf5fd46b0a577dd42af715324f5830..fceaf401940592002c3231fd256ce2d63394bf80 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -86,6 +86,25 @@ declare class AdmZip {
+      * @param comment Comment to be attached to the file
+      */
+     addLocalFile(localPath: string, zipPath?: string, zipName?: string, comment?: string): void;
++    /**
++     * Adds a file from the disk to the archive.
++     *
++     * @param options Options object, if it is string it us used as localPath.
++     * @param options.localPath Local path to the file.
++     * @param options.comment Optional file comment.
++     * @param options.zipPath Optional path inside the zip
++     * @param options.zipName Optional name for the file
++     * @param callback The callback that handles the response.
++     */
++    addLocalFileAsync(
++        options: string | {
++            localPath: string,
++            comment?: string,
++            zipPath?: string,
++            zipName?: string,
++        },
++        callback: (err: Error, done: boolean) => void,
++    ): void;
+     /**
+      * Adds a local directory and all its nested files and directories to the
+      * archive.

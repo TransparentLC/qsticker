@@ -1,0 +1,33 @@
+server:
+  host: localhost
+  port: 4000
+  # 也可以使用 Unix Socket
+  # port: /var/run/crypto-lab.sock
+  base: /
+# 是否对下载的表情包进行无损压缩
+optimize:
+  png:
+    # 需要 oxipng
+    # https://github.com/shssoichiro/oxipng
+    enable: true
+    verbose: false
+  gif:
+    # 需要 gifsicle
+    # https://github.com/kohler/gifsicle
+    enable: true
+    verbose: false
+    # 是否进行有损压缩
+    # true/false 表示使用/不使用 --lossy=LOSSINESS
+    # 默认为 35，也可以在这里输入一个 5-200 的数值指定
+    # ezgif 的介绍：30 is very light compression, 200 is heavy
+    lossy: true
+update:
+  # 自动爬取新表情包的 cron 表达式
+  cron: 0 */4 * * *
+  # 爬取范围（最新的表情包 ID 加上和减去这个值）
+  range: 50
+  # 用于产生表情包存储路径的盐，设定后不应该修改
+  salt: urRD0yMCWrDhFihNObTXRnmZ8mSUWpxp
+  # 要求请求头包含 Authorization: Bearer {token} 才能使用 API 触发更新
+  # 留空则无需添加请求头
+  token: S3A0QLp65s0nKR8pGTsiildhj8aCSlSw

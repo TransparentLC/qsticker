@@ -1,0 +1,56 @@
+{
+    "name": "qsticker",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "check": "biome check --write --unsafe src",
+        "build": "esbuild --bundle --minify --charset=utf8 --platform=node --format=esm --packages=external --outfile=dist/index.js src/index.ts",
+        "serve": "node --run build && node dist/index.js",
+        "dev": "tsx watch src/index.ts",
+        "generate": "drizzle-kit generate",
+        "migrate": "drizzle-kit migrate",
+        "archive": "rm -f qsticker.7z && 7z a -mx9 qsticker.7z . -xr!.git -xr!.vscode -xr!database/database.db -xr!database/database.db-shm -xr!database/database.db-wal -xr!dist -xr!drizzle -xr!frontend -xr!node_modules -xr!storage -xr!config.yaml -xr!deploy.cmd -xr!pnpm-lock.yaml",
+        "unarchive": "rm -rf public && 7z x -y qsticker.7z"
+    },
+    "dependencies": {
+        "@commitlint/cli": "^19.8.1",
+        "@commitlint/config-conventional": "^19.8.1",
+        "@hono/node-server": "^1.19.0",
+        "@hono/standard-validator": "^0.1.4",
+        "@scalar/hono-api-reference": "^0.9.13",
+        "adm-zip": "^0.5.16",
+        "better-sqlite3": "^12.2.0",
+        "drizzle-orm": "^0.44.4",
+        "execa": "^9.6.0",
+        "exit-hook": "^4.0.0",
+        "gifuct-js": "^2.1.2",
+        "hono": "^4.9.2",
+        "hono-openapi": "^0.5.0-rc.3",
+        "hono-rate-limiter": "^0.4.2",
+        "js-yaml": "^4.1.0",
+        "lefthook": "^1.12.3",
+        "node-cron": "^4.2.1",
+        "p-limit": "^7.1.0",
+        "vue-router": "^4.5.1",
+        "wretch": "^2.11.0",
+        "zod": "^4.0.17",
+        "zod-validation-error": "^4.0.1"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.2.0",
+        "@types/adm-zip": "^0.5.7",
+        "@types/better-sqlite3": "^7.6.13",
+        "@types/js-yaml": "^4.0.9",
+        "@types/node": "^24.3.0",
+        "drizzle-kit": "^0.31.4",
+        "esbuild": "^0.25.9",
+        "rollup-plugin-visualizer": "^6.0.3",
+        "tsx": "^4.20.4"
+    },
+    "pnpm": {
+        "patchedDependencies": {
+            "@types/adm-zip": "patches/@types__adm-zip.patch"
+        }
+    }
+}
