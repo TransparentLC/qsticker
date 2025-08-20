@@ -109,7 +109,11 @@ if (
 }
 
 serve({
-    fetch: app.fetch,
+    fetch: req => {
+        const url = new URL(req.url);
+        url.protocol = req.headers.get('x-forwarded-proto') ?? url.protocol;
+        return app.fetch(new Request(url, req));
+    },
     hostname: config.server.host,
     port: config.server.port,
 });
