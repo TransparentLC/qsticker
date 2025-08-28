@@ -36,7 +36,7 @@
     </n-config-provider>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { mdiInformationOutline, mdiShare } from '@mdi/js';
 import {
     type ConfigProviderProps,
@@ -45,14 +45,10 @@ import {
     dateZhCN,
     type GlobalThemeOverrides,
     lightTheme,
-    NA,
-    NCode,
-    NInput,
-    NP,
     useOsTheme,
     zhCN,
 } from 'naive-ui';
-import { computed, h } from 'vue';
+import { computed } from 'vue';
 import NMdi from './components/mdi.vue';
 
 const osTheme = useOsTheme();
@@ -91,126 +87,104 @@ window.chiya.dialog.alert = options =>
             ...options,
         }),
     );
-window.chiya.dialog.confirm = options =>
-    new Promise(resolve =>
-        window.chiya.dialog.create({
-            positiveText: '确定',
-            negativeText: '取消',
-            onPositiveClick: () => resolve(true),
-            onNegativeClick: () => resolve(false),
-            onMaskClick: () => resolve(null),
-            ...options,
-        }),
-    );
-window.chiya.dialog.prompt = options => {
-    let v = options.defaultValue || '';
-    return new Promise(resolve =>
-        window.chiya.dialog.create({
-            content: () =>
-                h(NInput, {
-                    defaultValue: options.defaultValue,
-                    placeholder: options.placeholder,
-                    onInput(e) {
-                        v = e;
-                    },
-                }),
-            positiveText: '确定',
-            negativeText: '取消',
-            onPositiveClick: () => resolve(v),
-            onNegativeClick: () => resolve(null),
-            onMaskClick: () => resolve(null),
-            ...options,
-        }),
-    );
-};
+// window.chiya.dialog.confirm = options =>
+//     new Promise(resolve =>
+//         window.chiya.dialog.create({
+//             positiveText: '确定',
+//             negativeText: '取消',
+//             onPositiveClick: () => resolve(true),
+//             onNegativeClick: () => resolve(false),
+//             onMaskClick: () => resolve(null),
+//             ...options,
+//         }),
+//     );
+// window.chiya.dialog.prompt = options => {
+//     let v = options.defaultValue || '';
+//     return new Promise(resolve =>
+//         window.chiya.dialog.create({
+//             content: () => (
+//                 <n-input
+//                     defaultValue={options.defaultValue}
+//                     placeholder={options.placeholder}
+//                     onInput={(e: string) => {
+//                         v = e;
+//                     }}
+//                 ></n-input>
+//             ),
+//             positiveText: '确定',
+//             negativeText: '取消',
+//             onPositiveClick: () => resolve(v),
+//             onNegativeClick: () => resolve(null),
+//             onMaskClick: () => resolve(null),
+//             ...options,
+//         }),
+//     );
+// };
 
 const showAbout = () =>
     window.chiya.dialog.create({
         title: '关于本站和使用帮助',
-        content: () => [
-            h(NP, () => '这是一个 QQ 表情包的镜像站。'),
-            h(NP, () => [
-                '主要功能是将 QQ 的',
-                h(
-                    NA,
-                    {
-                        href: 'https://zb.vip.qq.com/hybrid/emoticonmall/home',
-                        target: '_blank',
-                    },
-                    () => '表情商城',
-                ),
-                '的表情包直接保存为 PNG/GIF 文件（可以长按保存），或将整个表情包保存为 ZIP 文件，方便在 QQ 以外的地方使用。',
-            ]),
-            h(
-                NP,
-                () =>
-                    '由于获取表情包的原作者信息需要使用 QQ 登录，因此在这里无法获取和展示这部分内容，请使用 QQ 打开对应的表情商城页面查看。本站只提供表情包下载，请自行确认使用授权。',
-            ),
-            h(NP, () => [
-                '为了节省存储空间和带宽，打包下载的表情包使用 ',
-                h(
-                    NA,
-                    {
-                        href: 'https://github.com/oxipng/oxipng',
-                        target: '_blank',
-                    },
-                    () => 'Oxipng',
-                ),
-                ' 和 ',
-                h(
-                    NA,
-                    {
-                        href: 'http://www.lcdf.org/gifsicle/',
-                        target: '_blank',
-                    },
-                    () => 'Gifsicle',
-                ),
-                ' 进行了压缩。',
-            ]),
-            h(NP, () => [
-                '如果有需要的话，可以使用 ',
-                h(
-                    NA,
-                    {
-                        href: 'https://ezgif.com/maker',
-                        target: '_blank',
-                    },
-                    () => 'ezgif',
-                ),
-                ' 或其他在线工具将 PNG 格式的表情转换为 GIF 格式。',
-            ]),
-            h(NP, () => [
-                '源代码：',
-                h(
-                    NA,
-                    {
-                        href: 'https://github.com/TransparentLC/qsticker',
-                        target: '_blank',
-                    },
-                    () => 'https://github.com/TransparentLC/qsticker',
-                ),
-            ]),
-            h(NP, () => [
-                'API 文档：',
-                h(
-                    NA,
-                    {
-                        href: 'docs',
-                        target: '_blank',
-                    },
-                    () => '点此查看',
-                ),
-                ' ',
-                h(
-                    NA,
-                    {
-                        href: 'openapi.json',
-                        target: '_blank',
-                    },
-                    () => h(NCode, () => 'openapi.json'),
-                ),
-            ]),
-        ],
+        content: () => (
+            <>
+                <n-p>这是一个 QQ 表情包的镜像站。</n-p>
+                <n-p>
+                    主要功能是将 QQ 的
+                    <n-a
+                        href="https://zb.vip.qq.com/hybrid/emoticonmall/home"
+                        target="_blank"
+                    >
+                        表情商城
+                    </n-a>
+                    的表情包直接保存为 PNG/GIF
+                    文件（可以长按保存），或将整个表情包保存为 ZIP 文件，方便在
+                    QQ 以外的地方使用。
+                </n-p>
+                <n-p>
+                    由于获取表情包的原作者信息需要使用 QQ
+                    登录，因此在这里无法获取和展示这部分内容，请使用 QQ
+                    打开对应的表情商城页面查看。本站只提供表情包下载，请自行确认使用授权。
+                </n-p>
+                <n-p>
+                    为了节省存储空间和带宽，打包下载的表情包使用{' '}
+                    <n-a
+                        href="https://github.com/oxipng/oxipng"
+                        target="_blank"
+                    >
+                        Oxipng
+                    </n-a>{' '}
+                    和{' '}
+                    <n-a href="http://www.lcdf.org/gifsicle/" target="_blank">
+                        Gifsicle
+                    </n-a>{' '}
+                    进行了压缩。
+                </n-p>
+                <n-p>
+                    如果有需要的话，可以使用{' '}
+                    <n-a href="https://ezgif.com/maker" target="_blank">
+                        ezgif
+                    </n-a>{' '}
+                    或其他在线工具将 PNG 格式的表情转换为 GIF 格式。
+                </n-p>
+                <n-p>
+                    源代码：
+                    <n-a
+                        href="https://github.com/TransparentLC/qsticker"
+                        target="_blank"
+                    >
+                        https://github.com/TransparentLC/qsticker
+                    </n-a>
+                </n-p>
+                <n-p>
+                    API 文档：
+                    <n-a href="docs" target="_blank">
+                        点此查看
+                    </n-a>{' '}
+                    <n-a href="openapi.json" target="_blank">
+                        <n-code>openapi.json</n-code>
+                    </n-a>
+                </n-p>
+            </>
+        ),
     });
 
 const copyLink = () =>

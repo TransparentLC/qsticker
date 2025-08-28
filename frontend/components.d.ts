@@ -9,7 +9,9 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Mdi: typeof import('./src/components/mdi.vue')['default']
+    NA: typeof import('naive-ui')['NA']
     NButton: typeof import('naive-ui')['NButton']
+    NCode: typeof import('naive-ui')['NCode']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NFlex: typeof import('naive-ui')['NFlex']
     NGi: typeof import('naive-ui')['NGi']
@@ -21,6 +23,7 @@ declare module 'vue' {
     NLayoutHeader: typeof import('naive-ui')['NLayoutHeader']
     NList: typeof import('naive-ui')['NList']
     NListItem: typeof import('naive-ui')['NListItem']
+    NP: typeof import('naive-ui')['NP']
     NPagination: typeof import('naive-ui')['NPagination']
     NSkeleton: typeof import('naive-ui')['NSkeleton']
     NSpace: typeof import('naive-ui')['NSpace']
