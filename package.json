@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "check": "biome check --write --unsafe src",
+        "check": "biome check --write --unsafe src frontend/src",
         "build": "esbuild --bundle --minify --charset=utf8 --platform=node --format=esm --packages=external --outfile=dist/index.js src/index.ts",
         "serve": "node --run build && node dist/index.js",
         "dev": "tsx watch src/index.ts",
