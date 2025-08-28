@@ -1,6 +1,5 @@
 import { createMiddleware } from 'hono/factory';
 import { validator as zValidator } from 'hono-openapi';
-import { rateLimiter as honoRateLimiter } from 'hono-rate-limiter';
 import { fromError } from 'zod-validation-error';
 
 export const logger = createMiddleware(async (ctx, next) => {
@@ -41,10 +40,3 @@ export const validator: typeof zValidator = (target, schema, hook) =>
                     );
             }),
     );
-
-export const rateLimiter: typeof honoRateLimiter = config =>
-    honoRateLimiter({
-        standardHeaders: 'draft-7',
-        message: { error: 'Too many requests, please try again later.' },
-        ...config,
-    });

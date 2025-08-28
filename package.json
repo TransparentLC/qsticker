@@ -27,7 +27,6 @@
         "gifuct-js": "^2.1.2",
         "hono": "^4.9.4",
         "hono-openapi": "^0.5.0-rc.3",
-        "hono-rate-limiter": "^0.4.2",
         "js-yaml": "^4.1.0",
         "lefthook": "^1.12.3",
         "node-cron": "^4.2.1",
