@@ -17,15 +17,15 @@
         "@commitlint/cli": "^19.8.1",
         "@commitlint/config-conventional": "^19.8.1",
         "@hono/node-server": "^1.19.0",
-        "@hono/standard-validator": "^0.1.4",
-        "@scalar/hono-api-reference": "^0.9.13",
+        "@hono/standard-validator": "^0.1.5",
+        "@scalar/hono-api-reference": "^0.9.16",
         "adm-zip": "^0.5.16",
         "better-sqlite3": "^12.2.0",
-        "drizzle-orm": "^0.44.4",
+        "drizzle-orm": "^0.44.5",
         "execa": "^9.6.0",
         "exit-hook": "^4.0.0",
         "gifuct-js": "^2.1.2",
-        "hono": "^4.9.2",
+        "hono": "^4.9.4",
         "hono-openapi": "^0.5.0-rc.3",
         "hono-rate-limiter": "^0.4.2",
         "js-yaml": "^4.1.0",
@@ -34,11 +34,11 @@
         "p-limit": "^7.1.0",
         "vue-router": "^4.5.1",
         "wretch": "^2.11.0",
-        "zod": "^4.0.17",
+        "zod": "^4.1.4",
         "zod-validation-error": "^4.0.1"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.2.0",
+        "@biomejs/biome": "^2.2.2",
         "@types/adm-zip": "^0.5.7",
         "@types/better-sqlite3": "^7.6.13",
         "@types/js-yaml": "^4.0.9",
@@ -46,7 +46,7 @@
         "drizzle-kit": "^0.31.4",
         "esbuild": "^0.25.9",
         "rollup-plugin-visualizer": "^6.0.3",
-        "tsx": "^4.20.4"
+        "tsx": "^4.20.5"
     },
     "pnpm": {
         "patchedDependencies": {
