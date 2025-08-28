@@ -48,7 +48,7 @@ import {
     useOsTheme,
     zhCN,
 } from 'naive-ui';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import NMdi from './components/mdi.vue';
 
 const osTheme = useOsTheme();
@@ -191,4 +191,31 @@ const copyLink = () =>
     navigator.clipboard
         .writeText(location.href)
         .then(() => alert(`已复制到剪贴板：\n${location.href}`));
+
+onMounted(() => {
+    if (navigator.userAgent.match(/\bQQ\/(?:\d+\.){3}\d+\b/)) {
+        window.chiya.dialog.alert({
+            title: '提示',
+            content: () => (
+                <>
+                    <n-p>
+                        你正在使用手机 QQ
+                        打开本站，可以通过长按保存的方式保存单张表情包，但是可能无法使用本站的打包下载功能。
+                    </n-p>
+                    <n-p>
+                        如果需要打包下载表情包，请在浏览器中打开本站，或直接从
+                        QQ 的
+                        <n-a
+                            href="https://zb.vip.qq.com/hybrid/emoticonmall/home"
+                            target="_blank"
+                        >
+                            表情商城
+                        </n-a>
+                        下载。
+                    </n-p>
+                </>
+            ),
+        });
+    }
+});
 </script>
