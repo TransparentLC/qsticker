@@ -14,7 +14,7 @@ export const logger = createMiddleware(async (ctx, next) => {
     const remoteAddress =
         ctx.req.header('X-Real-IP') ??
         ctx.req.header('X-Forwarded-For')?.split(',').pop()?.trim() ??
-        ctx.env.incoming.socket.remoteAddress;
+        ctx.env?.incoming.socket.remoteAddress;
     console.log(
         new Date().toISOString(),
         '-',
