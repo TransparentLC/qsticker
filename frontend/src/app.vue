@@ -163,7 +163,15 @@ const showAbout = () =>
                     <n-a href="https://ezgif.com/maker" target="_blank">
                         ezgif
                     </n-a>{' '}
-                    或其他在线工具将 PNG 格式的表情转换为 GIF 格式。
+                    或其他在线工具将 PNG 格式的表情转换为 GIF
+                    格式，也可以在本地使用{' '}
+                    <n-a href="https://imagemagick.org/" target="_blank">
+                        ImageMagick
+                    </n-a>{' '}
+                    等工具转换：
+                    <n-code>
+                        magick convert xxx.png -dither FloydSteinberg xxx.gif
+                    </n-code>
                 </n-p>
                 <n-p>
                     源代码：
