@@ -8,7 +8,7 @@ import type { HTTPResponseError } from 'hono/types';
 import type { ContentfulStatusCode, StatusCode } from 'hono/utils/http-status';
 import { openAPIRouteHandler } from 'hono-openapi';
 import config from './config';
-import { logger } from './middlewares';
+import { etag, logger } from './middlewares';
 import apiRoutes from './routes';
 
 if (!fs.existsSync('storage')) fs.mkdirSync('storage');
@@ -28,13 +28,13 @@ app.use(logger)
     .route('/api', apiRoutes)
     .get(
         '/parcel/:md5{[\\da-f]{32}|\\d{6}}/:filename{126x126\\.png|200x200\\.png|300x300\\.png|raw200\\.gif|raw300\\.gif}',
+        etag(),
         async ctx => {
             const r = await proxy(
                 ctx.req.param('md5').length === 32
                     ? `https://i.gtimg.cn/club/item/parcel/item/${ctx.req.param('md5').substring(0, 2)}/${ctx.req.param('md5')}/${ctx.req.param('filename')}`
                     : `https://i.gtimg.cn/club/item/parcel/img/parcel/${ctx.req.param('md5').substring(5, 6)}/${ctx.req.param('md5')}/${ctx.req.param('filename')}`,
             );
-            console.log(r);
             if (r.status === 200) {
                 r.headers.set(
                     'Cache-Control',
@@ -62,6 +62,7 @@ app.use(logger)
     )
     .use(
         '/storage/*',
+        etag(),
         serveStatic({
             root: './storage',
             rewriteRequestPath: p =>

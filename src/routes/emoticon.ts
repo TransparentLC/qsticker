@@ -4,7 +4,7 @@ import { describeRoute, resolver } from 'hono-openapi';
 import { z } from 'zod';
 import config from '../config';
 import db from '../database';
-import { validator } from '../middlewares';
+import { etag, validator } from '../middlewares';
 import { emoticon } from '../schema';
 
 const app = new Hono<HonoSchema>();
@@ -61,6 +61,7 @@ app.get(
             emoticonId: z.coerce.number().int().min(1).describe('表情包 ID'),
         }),
     ),
+    etag(),
     async ctx => {
         const param = ctx.req.valid('param');
         const metadata = db
@@ -146,6 +147,7 @@ app.get(
                 .describe('查看页数'),
         }),
     ),
+    etag(),
     async ctx => {
         const query = ctx.req.valid('query');
         // biome-ignore lint/style/noNonNullAssertion: count(*)必定存在
