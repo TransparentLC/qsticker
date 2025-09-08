@@ -10,6 +10,10 @@ optimize:
     # 需要 oxipng
     # https://github.com/shssoichiro/oxipng
     enable: true
+    # 使用更慢但是可以多压缩 1% 左右的 Zopfli 压缩
+    # true/false 表示使用/不使用 --zopfli
+    # 也可以输入最高为 255 的数值指定 --zi
+    zopfli: true
     verbose: false
   gif:
     # 需要 gifsicle

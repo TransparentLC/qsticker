@@ -10,6 +10,7 @@ type Config = {
     optimize: {
         png: {
             enable: boolean;
+            zopfli: boolean | number;
             verbose: boolean;
         };
         gif: {

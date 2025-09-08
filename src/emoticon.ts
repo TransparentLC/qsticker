@@ -77,13 +77,13 @@ export const archiveEmoticon = async (
     emoticon: Emoticon,
     archivePath: string,
 ) => {
-    const limit = pLimit(4);
+    const downloadLimit = pLimit(4);
     const images = await Promise.all(
         [
             { keyword: '', src: emoticon.icon, isIcon: true },
             ...emoticon.images.map(e => ({ ...e, isIcon: false })),
         ].map(e =>
-            limit(async () => {
+            downloadLimit(async () => {
                 const file = path.join(os.tmpdir(), crypto.randomUUID());
                 console.log(
                     'Archiving emoticon',
@@ -111,51 +111,97 @@ export const archiveEmoticon = async (
     );
     const zip = new AdmZip();
     const root = `${emoticon.emoticonId} - ${emoticon.name}`;
-    for (const image of images) {
-        if (config.optimize.gif && emoticon.animated && !image.isIcon) {
-            await execa(
-                'gifsicle',
-                [
-                    ...(config.optimize.gif.verbose ? ['--verbose'] : []),
-                    '--optimize=3',
-                    ...(config.optimize.gif.lossy
-                        ? [
-                              `--lossy${typeof config.optimize.gif.lossy === 'number' ? `=${config.optimize.gif.lossy}` : ''}`,
-                          ]
-                        : []),
-                    `--threads=${os.availableParallelism()}`,
-                    '--output',
-                    image.file,
-                    image.file,
-                ],
-                { stdout: 'inherit', stderr: 'inherit' },
-            );
-        } else if (config.optimize.png) {
-            await execa(
-                'oxipng',
-                [
-                    ...(config.optimize.png.verbose
-                        ? ['--verbose', '--verbose']
-                        : []),
-                    '--opt',
-                    'max',
-                    image.file,
-                ],
-                { stdout: 'inherit', stderr: 'inherit' },
-            );
-        }
-        const sizeOptimized = (await fs.promises.stat(image.file)).size;
+
+    const optimizeStart = performance.now();
+    if (config.optimize.gif && emoticon.animated) {
+        const gifLimit = pLimit(os.availableParallelism());
+        await Promise.all(
+            images
+                .filter(e => !e.isIcon)
+                .map(e =>
+                    gifLimit(async () => {
+                        await execa(
+                            'gifsicle',
+                            [
+                                ...(config.optimize.gif.verbose
+                                    ? ['--verbose']
+                                    : []),
+                                '--optimize=3',
+                                ...(config.optimize.gif.lossy
+                                    ? [
+                                          `--lossy${typeof config.optimize.gif.lossy === 'number' ? `=${config.optimize.gif.lossy}` : ''}`,
+                                      ]
+                                    : []),
+                                '--output',
+                                e.file,
+                                e.file,
+                            ],
+                            { stdout: 'inherit', stderr: 'inherit' },
+                        );
+                        const sizeOptimized = (await fs.promises.stat(e.file))
+                            .size;
+                        console.log(
+                            'Archiving emoticon',
+                            emoticon.emoticonId,
+                            'Optimized GIF',
+                            e.file,
+                            'from',
+                            e.size,
+                            'to',
+                            sizeOptimized,
+                            `(${((sizeOptimized / e.size - 1) * 100).toFixed(2)}%)`,
+                        );
+                    }),
+                ),
+        );
+    }
+    if (config.optimize.png) {
+        const pngs = images.filter(e => !emoticon.animated || e.isIcon);
+        const sizeBefore = pngs.reduce((a, c) => a + c.size, 0);
+        await execa(
+            'oxipng',
+            [
+                ...(config.optimize.png.verbose
+                    ? ['--verbose', '--verbose']
+                    : []),
+                '--opt',
+                'max',
+                '--fast',
+                ...(config.optimize.png.zopfli
+                    ? [
+                          '--zopfli',
+                          ...(typeof config.optimize.png.zopfli === 'number'
+                              ? ['--zi', config.optimize.png.zopfli.toString()]
+                              : []),
+                      ]
+                    : []),
+                ...pngs.map(e => e.file),
+            ],
+            { stdout: 'inherit', stderr: 'inherit' },
+        );
+        const sizeOptimized = (
+            await Promise.all(pngs.map(e => fs.promises.stat(e.file)))
+        ).reduce((a, c) => a + c.size, 0);
         console.log(
             'Archiving emoticon',
             emoticon.emoticonId,
-            'Optimized',
-            image.file,
-            'from',
-            image.size,
+            'Optimized PNG',
+            pngs.length,
+            'files from',
+            sizeBefore,
             'to',
             sizeOptimized,
-            `(${((sizeOptimized / image.size - 1) * 100).toFixed(2)}%)`,
+            `(${((sizeOptimized / sizeBefore - 1) * 100).toFixed(2)}%)`,
         );
+    }
+    const optimizeEnd = performance.now();
+    console.log(
+        'Optimized in',
+        (optimizeEnd - optimizeStart) / 1000,
+        'seconds',
+    );
+
+    for (const image of images) {
         await new Promise((resolve, reject) =>
             zip.addLocalFileAsync(
                 {
