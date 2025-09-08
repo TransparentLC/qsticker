@@ -27,7 +27,7 @@
         "exit-hook": "^4.0.0",
         "gifuct-js": "^2.1.2",
         "hono": "^4.9.6",
-        "hono-openapi": "^1.0.0",
+        "hono-openapi": "^1.0.2",
         "js-yaml": "^4.1.0",
         "lefthook": "^1.12.3",
         "node-cron": "^4.2.1",
@@ -38,7 +38,7 @@
         "zod-validation-error": "^4.0.1"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.2.2",
+        "@biomejs/biome": "^2.2.3",
         "@types/adm-zip": "^0.5.7",
         "@types/better-sqlite3": "^7.6.13",
         "@types/js-yaml": "^4.0.9",
