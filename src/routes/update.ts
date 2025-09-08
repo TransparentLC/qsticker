@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 import cron from 'node-cron';
 import pLimit from 'p-limit';
+import type { WretchError } from 'wretch';
 import { z } from 'zod';
 import config from '../config';
 import db from '../database';
@@ -29,7 +30,7 @@ app.use(ensureAdmin);
 type FetchEmoticonResult = {
     time: Date;
     emoticonId: number;
-    result: 'fetched' | 'unchanged' | 'failed';
+    result: 'fetched' | 'unchanged' | 'notfound' | 'failed';
 };
 
 const fetchEmoticonResults: FetchEmoticonResult[] = [];
@@ -103,11 +104,18 @@ const fetchEmoticonWithCheck = async (
                         result: 'fetched',
                     });
                 } catch (e) {
-                    console.log(e);
-                    return fetchEmoticonResultsAppend({
-                        emoticonId,
-                        result: 'unchanged',
-                    });
+                    if ((e as WretchError)?.status === 404) {
+                        return fetchEmoticonResultsAppend({
+                            emoticonId,
+                            result: 'notfound',
+                        });
+                    } else {
+                        console.log(e);
+                        return fetchEmoticonResultsAppend({
+                            emoticonId,
+                            result: 'failed',
+                        });
+                    }
                 }
             }),
         ),
