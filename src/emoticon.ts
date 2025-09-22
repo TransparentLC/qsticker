@@ -167,6 +167,9 @@ export const archiveEmoticon = async (
                 '--opt',
                 'max',
                 '--fast',
+                '--strip',
+                'safe',
+                '--alpha',
                 ...(config.optimize.png.zopfli
                     ? [
                           '--zopfli',
