@@ -32,12 +32,28 @@
                         </template>
                     </n-thing>
                     <n-flex>
-                        <n-button
-                            type="primary"
-                            tag="a"
-                            :href="archiveUrl"
-                            :download="`${route.params.emoticonId} - ${name}`"
-                        ><template #icon><n-mdi :icon="mdiDownload"></n-mdi></template>下载</n-button>
+                        <n-button-group>
+                            <n-button
+                                type="primary"
+                                tag="a"
+                                :href="archiveUrl"
+                                :download="`${route.params.emoticonId} - ${name}`"
+                            ><template #icon><n-mdi :icon="mdiDownload"></n-mdi></template>下载</n-button>
+                             <n-dropdown
+                                v-if="!animated"
+                                trigger="click"
+                                :options="[
+                                    { label: '下载并转换为 GIF', key: 'gif', icon: () => h(NMdi, { icon: mdiFileGifBox }) },
+                                ]"
+                                @select="downloadAlternative"
+                            >
+                                <n-button
+                                    type="primary"
+                                    secondary
+                                    style="width:0"
+                                ><template #icon><n-mdi :icon="mdiTriangleSmallDown"></n-mdi></template></n-button>
+                             </n-dropdown>
+                        </n-button-group>
                         <n-button
                             secondary
                             tag="a"
@@ -78,8 +94,9 @@
 </template>
 
 <script setup lang="ts">
-import { mdiDownload } from '@mdi/js';
-import { onMounted, ref, shallowRef, watch } from 'vue';
+import { mdiDownload, mdiFileGifBox, mdiTriangleSmallDown } from '@mdi/js';
+import type { Unzipped } from 'fflate';
+import { h, onMounted, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import wretch from 'wretch';
 import NMdi from '../components/mdi.vue';
@@ -133,4 +150,80 @@ const update = async () => {
 
 onMounted(update);
 watch(() => route.params.emoticonId, update);
+
+const downloadAlternative = async (format: string) => {
+    switch (format) {
+        case 'gif': {
+            const [{ unzip, zip }, GIF, GIFWorker] = await Promise.all([
+                import('fflate').then(({ unzip, zip }) => ({ unzip, zip })),
+                import('gif.js').then(e => e.default),
+                import('gif.js/dist/gif.worker.js?raw').then(e => e.default),
+            ]);
+            const archive = await fetch(archiveUrl.value)
+                .then(r => r.arrayBuffer())
+                .then(r => new Uint8Array(r));
+            const unzipped = await new Promise<Unzipped>((resolve, reject) =>
+                unzip(archive, (err, data) =>
+                    err ? reject(err) : resolve(data),
+                ),
+            );
+            const workerScript = URL.createObjectURL(new Blob([GIFWorker]));
+            await Promise.all(
+                Object.entries(unzipped)
+                    .filter(([path, _]) =>
+                        path.match(/\/emoticon\/.*?\.png$/gi),
+                    )
+                    .map(async ([path, data]) => {
+                        const image = await new Promise<HTMLImageElement>(
+                            (resolve, reject) => {
+                                const image = new Image();
+                                image.onload = () => {
+                                    URL.revokeObjectURL(image.src);
+                                    resolve(image);
+                                };
+                                image.onerror = reject;
+                                image.src = URL.createObjectURL(
+                                    new Blob([data.buffer as ArrayBuffer]),
+                                );
+                            },
+                        );
+                        unzipped[path.replace(/\.png$/g, '.gif')] =
+                            await new Promise<Uint8Array>(resolve => {
+                                const gif = new GIF({
+                                    workerScript,
+                                    quality: 5,
+                                    dither: 'FloydSteinberg',
+                                    transparent: 'rgba(0,0,0,0)',
+                                });
+                                gif.on('finished', blob =>
+                                    blob
+                                        .arrayBuffer()
+                                        .then(r => resolve(new Uint8Array(r))),
+                                );
+                                gif.addFrame(image);
+                                gif.render();
+                            });
+                        delete unzipped[path];
+                    }),
+            );
+            URL.revokeObjectURL(workerScript);
+            const repacked = await new Promise<Blob>((resolve, reject) =>
+                zip(unzipped, { level: 9 }, (err, data) =>
+                    err
+                        ? reject(err)
+                        : resolve(
+                              new Blob([data.buffer as ArrayBuffer], {
+                                  type: 'application/zip',
+                              }),
+                          ),
+                ),
+            );
+            const el = document.createElement('a');
+            el.href = URL.createObjectURL(repacked);
+            el.download = `${route.params.emoticonId} - ${name.value}`;
+            el.click();
+            URL.revokeObjectURL(el.href);
+        }
+    }
+};
 </script>

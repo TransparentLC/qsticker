@@ -10,12 +10,15 @@
     },
     "dependencies": {
         "@mdi/js": "^7.4.47",
+        "fflate": "^0.8.2",
+        "gif.js": "^0.2.0",
         "naive-ui": "^2.43.1",
         "throttle-debounce": "^5.0.2",
         "vue": "^3.5.21",
         "wretch": "^2.11.0"
     },
     "devDependencies": {
+        "@types/gif.js": "^0.2.5",
         "@types/throttle-debounce": "^5.0.2",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vitejs/plugin-vue-jsx": "^5.1.1",

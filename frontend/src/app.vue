@@ -159,12 +159,14 @@ const showAbout = () =>
                     进行了压缩。
                 </n-p>
                 <n-p>
-                    如果有需要的话，可以使用{' '}
+                    静态表情包为 PNG 格式，在 QQ
+                    中发送时会被视为图片，如果需要作为表情包发送则需要转换为 GIF
+                    格式。你可以选择在打包下载的同时将所有表情在线转换为
+                    GIF。对于单张表情包，也可以使用{' '}
                     <n-a href="https://ezgif.com/maker" target="_blank">
                         ezgif
                     </n-a>{' '}
-                    或其他在线工具将 PNG 格式的表情转换为 GIF
-                    格式，也可以在本地使用{' '}
+                    或其他在线工具，或在本地使用{' '}
                     <n-a href="https://imagemagick.org/" target="_blank">
                         ImageMagick
                     </n-a>{' '}
