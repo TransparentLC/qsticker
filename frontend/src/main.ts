@@ -14,6 +14,7 @@ const consoleBadge = (label: string, content: string, color: string) =>
 consoleBadge('Project', 'qsticker', '#07c');
 consoleBadge('Author', 'TransparentLC', '#f84');
 // @ts-expect-error
-consoleBadge('Build Time', __BUILD_TIME__, '#f48');
+consoleBadge('Commit', `${__COMMIT_HASH__} ${__COMMIT_TIME__}`, '#f48');
 // @ts-expect-error
 consoleBadge('Build With', `${__VUE_VERSION__} + ${__VITE_VERSION__}`, '#4b8');
+consoleBadge('Source', 'https://github.com/TransparentLC/qsticker', '#000');

@@ -1,3 +1,4 @@
+import childProcess from 'node:child_process';
 import fs from 'node:fs';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
@@ -74,7 +75,8 @@ export default defineConfig({
         },
     },
     define: {
-        __BUILD_TIME__: `"${(new Date()).toISOString()}"`,
+        __COMMIT_HASH__: `"${childProcess.execSync('git rev-parse HEAD').toString().trim()}"`,
+        __COMMIT_TIME__: `"${(new Date(parseInt(childProcess.execSync('git log -1 --format="%at"').toString().trim(), 10) * 1000)).toISOString()}"`,
         __VUE_VERSION__: `"Vue ${JSON.parse(fs.readFileSync('./node_modules/vue/package.json', { encoding: 'utf-8' })).version}"`,
         __VITE_VERSION__: `"Vite ${JSON.parse(fs.readFileSync('./node_modules/vite/package.json', { encoding: 'utf-8' })).version}"`,
     },
