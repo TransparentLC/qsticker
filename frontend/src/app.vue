@@ -87,17 +87,17 @@ window.chiya.dialog.alert = options =>
             ...options,
         }),
     );
-// window.chiya.dialog.confirm = options =>
-//     new Promise(resolve =>
-//         window.chiya.dialog.create({
-//             positiveText: '确定',
-//             negativeText: '取消',
-//             onPositiveClick: () => resolve(true),
-//             onNegativeClick: () => resolve(false),
-//             onMaskClick: () => resolve(null),
-//             ...options,
-//         }),
-//     );
+window.chiya.dialog.confirm = options =>
+    new Promise(resolve =>
+        window.chiya.dialog.create({
+            positiveText: '确定',
+            negativeText: '取消',
+            onPositiveClick: () => resolve(true),
+            onNegativeClick: () => resolve(false),
+            onMaskClick: () => resolve(null),
+            ...options,
+        }),
+    );
 // window.chiya.dialog.prompt = options => {
 //     let v = options.defaultValue || '';
 //     return new Promise(resolve =>

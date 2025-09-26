@@ -9,6 +9,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@libwebp-wasm/gif2webp": "^1.0.8",
+        "@libwebp-wasm/img2webp": "^1.0.0",
         "@mdi/js": "^7.4.47",
         "fflate": "^0.8.2",
         "gif.js": "^0.2.0",
