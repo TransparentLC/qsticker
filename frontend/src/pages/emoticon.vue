@@ -244,7 +244,7 @@ const downloadAlternative = async (format: string) => {
                             await new Promise<Uint8Array>(resolve => {
                                 const gif = new GIF({
                                     workerScript: gifWorkerScript,
-                                    quality: 5,
+                                    quality: 1,
                                     dither: 'FloydSteinberg',
                                     transparent: 'rgba(0,0,0,0)',
                                 });

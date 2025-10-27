@@ -172,7 +172,7 @@ const showAbout = () =>
                     </n-a>{' '}
                     等工具转换：
                     <n-code>
-                        magick convert xxx.png -dither FloydSteinberg xxx.gif
+                        magick xxx.png -dither FloydSteinberg xxx.gif
                     </n-code>
                 </n-p>
                 <n-p>
