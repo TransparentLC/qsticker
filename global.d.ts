@@ -20,24 +20,14 @@ declare global {
         Bindings: HttpBindings;
     };
 
-    // https://gxh.vip.qq.com/qqshow/admindata/comdata/vipEmoji_item_203291/xydata.json
+    // https://i.gtimg.cn/club/item/parcel/9/245759_android.json
     type EmoticonMetadata = {
-        appData: {
+        name: string;
+        mark: string;
+        updateTime: number;
+        imgs: {
+            id: string;
             name: string;
-        };
-        timestamp: number;
-        data: {
-            baseInfo: [
-                {
-                    name: string;
-                    tag: string;
-                    desc: string;
-                },
-            ];
-            md5Info: {
-                name: string;
-                md5: string;
-            }[];
-        };
+        }[];
     };
 }

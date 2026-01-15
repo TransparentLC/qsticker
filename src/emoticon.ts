@@ -30,9 +30,7 @@ export const parseEmoticonMetadata = async (
     metadata: EmoticonMetadata,
 ): Promise<Emoticon> => {
     const animatedCheckMd5 =
-        metadata.data.md5Info[
-            Math.floor(Math.random() * metadata.data.md5Info.length)
-        ].md5;
+        metadata.imgs[Math.floor(Math.random() * metadata.imgs.length)].id;
     const animateCheckGIF = await wretch(
         makeEmoticonUrl(animatedCheckMd5, 'raw200.gif'),
     )
@@ -43,20 +41,17 @@ export const parseEmoticonMetadata = async (
         animateCheckGIF.frames.filter(e => (e as Frame).image).length > 1;
     return {
         emoticonId,
-        name: metadata.data.baseInfo[0].name,
-        description: metadata.data.baseInfo[0].desc,
+        name: metadata.name,
+        description: metadata.mark,
         icon: `https://i.gtimg.cn/club/item/parcel/img/parcel/${emoticonId % 10}/${emoticonId}/200x200.png`,
         archiveUrl: '',
         archiveSize: 0,
         animated,
-        images: metadata.data.md5Info.map(e => ({
+        images: metadata.imgs.map(e => ({
             keyword: e.name,
-            src: makeEmoticonUrl(
-                e.md5,
-                animated ? 'raw300.gif' : '300x300.png',
-            ),
-            // preview: makeEmoticonUrl(e.md5, '126x126.png'),
-            preview: makeEmoticonUrl(e.md5, '300x300.png'),
+            src: makeEmoticonUrl(e.id, animated ? 'raw300.gif' : '300x300.png'),
+            // preview: makeEmoticonUrl(e.id, '126x126.png'),
+            preview: makeEmoticonUrl(e.id, '300x300.png'),
         })),
         metadata,
     };
@@ -65,8 +60,8 @@ export const parseEmoticonMetadata = async (
 // 根据表情包 ID 获取表情包信息
 export const fetchEmoticon = (emoticonId: number) =>
     wretch(
-        `https://gxh.vip.qq.com/qqshow/admindata/comdata/vipEmoji_item_${emoticonId}/xydata.json`,
-        // `https://p.qpic.cn/CDN_STATIC/0/data/imgcache/htdocs/qqshow/admindata/comdata/vipEmoji_item_${emoticonId}/xydata.json`,
+        `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}_android.json`,
+        // `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}_ios.json`
     )
         .get()
         .json<EmoticonMetadata>()
