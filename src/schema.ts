@@ -5,6 +5,9 @@ export const emoticon = sqliteTable('emoticon', {
     name: text('name').notNull(),
     description: text('description').notNull(),
     icon: text('icon').notNull(),
+    updateTime: text('update_time')
+        .$defaultFn(() => new Date(0).toISOString())
+        .notNull(),
     archiveUrl: text('archive_url').notNull(),
     archiveSize: integer('archive_size').notNull(),
     animated: integer('animated', { mode: 'boolean' }).notNull(),

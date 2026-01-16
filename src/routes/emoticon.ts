@@ -24,6 +24,9 @@ app.get(
                                 name: z.string().describe('表情包名称'),
                                 description: z.string().describe('表情包说明'),
                                 icon: z.url().describe('图标 URL'),
+                                updateTime: z.iso
+                                    .datetime()
+                                    .describe('更新时间（ISO 8601）'),
                                 archiveUrl: z.url().describe('打包下载 URL'),
                                 archiveSize: z
                                     .number()
@@ -70,6 +73,7 @@ app.get(
                 name: emoticon.name,
                 description: emoticon.description,
                 icon: emoticon.icon,
+                updateTime: emoticon.updateTime,
                 archiveUrl: emoticon.archiveUrl,
                 archiveSize: emoticon.archiveSize,
                 animated: emoticon.animated,
@@ -116,6 +120,9 @@ app.get(
                                             .string()
                                             .describe('表情包说明'),
                                         icon: z.url().describe('图标 URL'),
+                                        updateTime: z.iso
+                                            .datetime()
+                                            .describe('更新时间（ISO 8601）'),
                                         archiveUrl: z
                                             .url()
                                             .describe('打包下载 URL'),
@@ -166,6 +173,7 @@ app.get(
                 name: emoticon.name,
                 description: emoticon.description,
                 icon: emoticon.icon,
+                updateTime: emoticon.updateTime,
                 archiveUrl: emoticon.archiveUrl,
                 archiveSize: emoticon.archiveSize,
                 animated: emoticon.animated,

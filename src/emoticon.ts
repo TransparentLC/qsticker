@@ -44,6 +44,7 @@ export const parseEmoticonMetadata = async (
         name: metadata.name,
         description: metadata.mark,
         icon: `https://i.gtimg.cn/club/item/parcel/img/parcel/${emoticonId % 10}/${emoticonId}/200x200.png`,
+        updateTime: new Date(metadata.updateTime * 1e3).toISOString(),
         archiveUrl: '',
         archiveSize: 0,
         animated,
