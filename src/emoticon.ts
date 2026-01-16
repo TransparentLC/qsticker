@@ -60,7 +60,8 @@ export const parseEmoticonMetadata = async (
 // 根据表情包 ID 获取表情包信息
 export const fetchEmoticon = (emoticonId: number) =>
     wretch(
-        `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}_android.json`,
+        `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}.json`,
+        // `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}_android.json`,
         // `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}_ios.json`
     )
         .get()
