@@ -2,7 +2,10 @@ import { createApp } from 'vue';
 import app from './app.vue';
 import router from './router';
 
-createApp(app).use(router).mount('#app');
+createApp(app)
+    // @ts-expect-error
+    .use(router)
+    .mount('#app');
 
 const consoleBadge = (label: string, content: string, color: string) =>
     console.log(
