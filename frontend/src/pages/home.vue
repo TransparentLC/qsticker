@@ -61,6 +61,12 @@
                                     size="small"
                                     style="font-weight:normal"
                                 >GIF</n-tag>
+                                <n-tag
+                                    v-if="reactiveWindowSize.width.value >= 420 && now.getTime() - e.updateTime.getTime() < 86400000"
+                                    type="success"
+                                    size="small"
+                                    style="font-weight:normal"
+                                >{{ timeDiff(e.updateTime) }}更新</n-tag>
                             </n-flex>
                         </template>
                     </n-thing>
@@ -99,6 +105,7 @@ const emoticons = shallowRef<
         name: string;
         description: string;
         icon: string;
+        updateTime: Date;
         archiveUrl: string;
         archiveSize: number;
         animated: boolean;
@@ -106,6 +113,21 @@ const emoticons = shallowRef<
 >([]);
 const page = ref(1);
 const pageCount = ref(0);
+const now = ref(new Date());
+setInterval(() => (now.value = new Date()), 1000);
+const timeDiff = (t: Date) => {
+    let diff = Math.abs(t.getTime() - now.value.getTime());
+    const beforeOrAfter = t < now.value ? '前' : '后';
+    if (diff < 60000) {
+        return `${Math.floor(diff / 1000)} 秒${beforeOrAfter}`;
+    } else if (diff < 3600000) {
+        return `${Math.floor(diff / 60000)} 分钟${beforeOrAfter}`;
+    } else if (diff < 86400000) {
+        return `${Math.floor(diff / 3600000)} 小时${beforeOrAfter}`;
+    } else {
+        return `${Math.floor(diff / 86400000)} 天${beforeOrAfter}`;
+    }
+};
 
 const updateEmoticons = async (resetPage: boolean = false) => {
     loading.value = true;
@@ -124,13 +146,17 @@ const updateEmoticons = async (resetPage: boolean = false) => {
                 name: string;
                 description: string;
                 icon: string;
+                updateTime: string;
                 archiveUrl: string;
                 archiveSize: number;
                 animated: boolean;
             }[];
         }>();
     if (resetPage) page.value = 1;
-    emoticons.value = r.result;
+    emoticons.value = r.result.map(e => ({
+        ...e,
+        updateTime: new Date(e.updateTime),
+    }));
     pageCount.value = r.pages;
     loading.value = false;
 };
