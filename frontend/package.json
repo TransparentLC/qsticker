@@ -14,16 +14,16 @@
         "@mdi/js": "^7.4.47",
         "fflate": "^0.8.2",
         "gif.js": "^0.2.0",
-        "naive-ui": "^2.43.2",
+        "naive-ui": "^2.44.1",
         "throttle-debounce": "^5.0.2",
-        "vue": "^3.5.29",
-        "wretch": "^3.0.6"
+        "vue": "^3.5.30",
+        "wretch": "^3.0.7"
     },
     "devDependencies": {
         "@types/gif.js": "^0.2.5",
         "@types/throttle-debounce": "^5.0.2",
-        "@vitejs/plugin-vue": "^6.0.4",
-        "@vitejs/plugin-vue-jsx": "^5.1.4",
+        "@vitejs/plugin-vue": "^6.0.5",
+        "@vitejs/plugin-vue-jsx": "^5.1.5",
         "@vue/tsconfig": "^0.9.0",
         "typescript": "^5.9.3",
         "unplugin-auto-import": "^21.0.0",
@@ -31,6 +31,6 @@
         "vite": "^7.3.1",
         "vite-plugin-html": "^3.2.2",
         "vite-plugin-magic-preloader": "^1.2.1",
-        "vue-tsc": "^3.2.5"
+        "vue-tsc": "^3.2.6"
     }
 }
