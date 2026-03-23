@@ -1,11 +1,11 @@
-import { count, desc, eq, like } from 'drizzle-orm';
+import { count, desc, eq, like, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 import { z } from 'zod';
 import config from '../config';
 import db from '../database';
 import { etag, validator } from '../middlewares';
-import { emoticon } from '../schema';
+import { emoticon, emoticonImage } from '../schema';
 
 const app = new Hono<HonoSchema>();
 
@@ -33,14 +33,14 @@ app.get(
                                     .describe('打包下载的文件大小'),
                                 animated: z
                                     .boolean()
-                                    .describe('是否为动态表情'),
+                                    .describe('是否包含动态表情'),
                                 images: z
                                     .array(
                                         z.object({
                                             keyword: z
                                                 .string()
                                                 .describe('表情备注'),
-                                            src: z
+                                            url: z
                                                 .url()
                                                 .describe('表情图片 URL'),
                                             preview: z
@@ -48,6 +48,9 @@ app.get(
                                                 .describe(
                                                     '预览图片 URL，即使是动态表情此处也会使用静态图片',
                                                 ),
+                                            animated: z
+                                                .boolean()
+                                                .describe('是否为动态表情'),
                                         }),
                                     )
                                     .describe('表情包图片信息'),
@@ -74,10 +77,10 @@ app.get(
                 description: emoticon.description,
                 icon: emoticon.icon,
                 updateTime: emoticon.updateTime,
+                source: emoticon.source,
                 archiveUrl: emoticon.archiveUrl,
                 archiveSize: emoticon.archiveSize,
                 animated: emoticon.animated,
-                images: emoticon.images,
             })
             .from(emoticon)
             .where(eq(emoticon.emoticonId, param.emoticonId))
@@ -92,8 +95,18 @@ app.get(
                 config.server.base +
                 metadata.archiveUrl;
         }
+        const images = db
+            .select({
+                keyword: emoticonImage.keyword,
+                url: emoticonImage.url,
+                preview: sql<string>`IFNULL(${emoticonImage.preview}, ${emoticonImage.url})`,
+                animated: emoticonImage.animated,
+            })
+            .from(emoticonImage)
+            .where(eq(emoticonImage.emoticonId, metadata.emoticonId))
+            .all();
         ctx.header('Cache-Control', 'public, max-age=3600');
-        return ctx.json(metadata);
+        return ctx.json({ ...metadata, images });
     },
 );
 
@@ -123,6 +136,9 @@ app.get(
                                         updateTime: z.iso
                                             .datetime()
                                             .describe('更新时间（ISO 8601）'),
+                                        source: z
+                                            .enum(['qq'])
+                                            .describe('表情包出处'),
                                         archiveUrl: z
                                             .url()
                                             .describe('打包下载 URL'),
@@ -131,7 +147,7 @@ app.get(
                                             .describe('打包下载的文件大小'),
                                         animated: z
                                             .boolean()
-                                            .describe('是否为动态表情'),
+                                            .describe('是否包含动态表情'),
                                     }),
                                 ),
                             }),
@@ -174,6 +190,7 @@ app.get(
                 description: emoticon.description,
                 icon: emoticon.icon,
                 updateTime: emoticon.updateTime,
+                source: emoticon.source,
                 archiveUrl: emoticon.archiveUrl,
                 archiveSize: emoticon.archiveSize,
                 animated: emoticon.animated,
@@ -184,7 +201,7 @@ app.get(
                     ? like(emoticon.name, `%${query.keyword}%`)
                     : undefined,
             )
-            .orderBy(desc(emoticon.emoticonId))
+            .orderBy(desc(emoticon.updateTime))
             .limit(10)
             .offset((query.page - 1) * 10)
             .all()

@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { eq, max } from 'drizzle-orm';
+import { eq, max, or } from 'drizzle-orm';
 import type { MiddlewareHandler } from 'hono';
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
@@ -11,9 +11,9 @@ import type { WretchError } from 'wretch';
 import { z } from 'zod';
 import config from '../config';
 import db from '../database';
-import { archiveEmoticon, fetchEmoticon } from '../emoticon';
+import { archiveEmoticon } from '../emoticon';
 import { validator } from '../middlewares';
-import { emoticon } from '../schema';
+import { emoticon, emoticonImage } from '../schema';
 
 const ensureAdmin: MiddlewareHandler = async (ctx, next) => {
     if (
@@ -51,11 +51,7 @@ const fetchEmoticonWithCheck = async (
         emoticonIds.map(emoticonId =>
             fetchEmoticonLimit(async () => {
                 const metadataCheckFetched = db
-                    .select({
-                        emoticonId: emoticon.emoticonId,
-                        name: emoticon.name,
-                        archiveUrl: emoticon.archiveUrl,
-                    })
+                    .select({ archiveUrl: emoticon.archiveUrl })
                     .from(emoticon)
                     .where(eq(emoticon.emoticonId, emoticonId))
                     .get();
@@ -75,11 +71,9 @@ const fetchEmoticonWithCheck = async (
                         result: 'unchanged',
                     });
                 }
-                db.delete(emoticon)
-                    .where(eq(emoticon.emoticonId, emoticonId))
-                    .run();
                 try {
-                    const metadata = await fetchEmoticon(emoticonId);
+                    const [metadata, images] =
+                        await archiveEmoticon(emoticonId);
                     const archiveHash = crypto
                         .createHmac('sha256', config.update.salt)
                         .update(`${emoticonId}#${metadata.name}`)
@@ -93,18 +87,45 @@ const fetchEmoticonWithCheck = async (
                     await fs.promises.mkdir(path.dirname(archivePath), {
                         recursive: true,
                     });
-                    await archiveEmoticon(metadata, archivePath);
+                    try {
+                        await fs.promises.rename(
+                            metadata.archiveUrl,
+                            archivePath,
+                        );
+                    } catch (err) {
+                        if ((err as NodeJS.ErrnoException).code !== 'EXDEV')
+                            throw err;
+                        await fs.promises.copyFile(
+                            metadata.archiveUrl,
+                            archivePath,
+                        );
+                        await fs.promises.rm(metadata.archiveUrl);
+                    }
                     metadata.archiveUrl = `${archivePath.replaceAll(path.sep, '/')}`;
-                    metadata.archiveSize = (
-                        await fs.promises.stat(archivePath)
-                    ).size;
+                    db.delete(emoticonImage)
+                        .where(
+                            or(
+                                ...images.map(e =>
+                                    eq(
+                                        emoticonImage.emoticonImageId,
+                                        e.emoticonImageId,
+                                    ),
+                                ),
+                            ),
+                        )
+                        .run();
+                    db.delete(emoticon)
+                        .where(eq(emoticon.emoticonId, emoticonId))
+                        .run();
                     db.insert(emoticon).values(metadata).run();
+                    db.insert(emoticonImage).values(images).run();
                     return fetchEmoticonResultsAppend({
                         emoticonId,
                         result: 'fetched',
                     });
                 } catch (e) {
                     if ((e as WretchError)?.status === 404) {
+                        console.log(e);
                         return fetchEmoticonResultsAppend({
                             emoticonId,
                             result: 'notfound',

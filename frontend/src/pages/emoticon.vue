@@ -74,7 +74,7 @@
                         <n-image
                             width="100%"
                             :show-toolbar="false"
-                            :preview-src="e.src"
+                            :preview-src="e.url"
                             :src="e.preview"
                             :alt="e.keyword"
                         ></n-image>
@@ -119,8 +119,9 @@ const animated = ref(false);
 const images = shallowRef<
     {
         keyword: string;
-        src: string;
+        url: string;
         preview: string;
+        animated: boolean;
     }[]
 >([]);
 
@@ -138,8 +139,9 @@ const update = async () => {
             animated: boolean;
             images: {
                 keyword: string;
-                src: string;
+                url: string;
                 preview: string;
+                animated: boolean;
             }[];
         }>();
     name.value = r.name;

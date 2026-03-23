@@ -5,156 +5,163 @@ import path from 'node:path';
 import stream from 'node:stream';
 import AdmZip from 'adm-zip';
 import { execa } from 'execa';
+import fg from 'fast-glob';
 import { type Frame, parseGIF } from 'gifuct-js';
 import pLimit from 'p-limit';
 import wretch from 'wretch';
 import config from './config';
-import type { emoticon as emoticonSchema } from './schema';
+import type {
+    emoticonImage as emoticonImageSchema,
+    emoticon as emoticonSchema,
+} from './schema';
 
 type Emoticon = typeof emoticonSchema.$inferSelect;
+type EmoticonImage = typeof emoticonImageSchema.$inferSelect;
 
-const makeEmoticonUrl = (
-    md5: string,
-    type:
-        | '126x126.png'
-        | '200x200.png'
-        | '300x300.png'
-        | 'raw200.gif'
-        | 'raw300.gif',
-) =>
-    `https://i.gtimg.cn/club/item/parcel/item/${md5.substring(0, 2)}/${md5}/${type}`;
+const isAnimatedGIF = (data: ArrayBuffer) =>
+    parseGIF(data).frames.filter(e => (e as Frame).image).length > 1;
 
-// 从 xydata.json 解析表情包信息
-export const parseEmoticonMetadata = async (
+export const archiveEmoticon = async (
     emoticonId: number,
-    metadata: EmoticonMetadata,
-): Promise<Emoticon> => {
-    const animatedCheckMd5 =
-        metadata.imgs[Math.floor(Math.random() * metadata.imgs.length)].id;
-    const animateCheckGIF = await wretch(
-        makeEmoticonUrl(animatedCheckMd5, 'raw200.gif'),
+): Promise<[Emoticon, EmoticonImage[]]> => {
+    // 解析表情包信息
+    const makeEmoticonUrl = (
+        md5: string,
+        type:
+            | '126x126.png'
+            | '200x200.png'
+            | '300x300.png'
+            | 'raw200.gif'
+            | 'raw300.gif',
+    ) =>
+        `https://i.gtimg.cn/club/item/parcel/item/${md5.substring(0, 2)}/${md5}/${type}`;
+
+    const metadata = await wretch(
+        `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}.json`,
     )
         .get()
-        .arrayBuffer()
-        .then(r => parseGIF(r));
-    const animated =
-        animateCheckGIF.frames.filter(e => (e as Frame).image).length > 1;
-    return {
+        .json<EmoticonMetadata>();
+
+    const emoticon: Emoticon = {
         emoticonId,
         name: metadata.name,
         description: metadata.mark,
         icon: `https://i.gtimg.cn/club/item/parcel/img/parcel/${emoticonId % 10}/${emoticonId}/200x200.png`,
         updateTime: new Date(metadata.updateTime * 1e3).toISOString(),
+        source: 'qq',
+        animated: false,
+        archiveSize: NaN,
         archiveUrl: '',
-        archiveSize: 0,
-        animated,
-        images: metadata.imgs.map(e => ({
-            keyword: e.name,
-            src: makeEmoticonUrl(e.id, animated ? 'raw300.gif' : '300x300.png'),
-            // preview: makeEmoticonUrl(e.id, '126x126.png'),
-            preview: makeEmoticonUrl(e.id, '300x300.png'),
-        })),
-        metadata,
     };
-};
+    const emoticonImages = metadata.imgs.map(
+        (e, i) =>
+            <EmoticonImage>{
+                emoticonId,
+                emoticonImageId: emoticonId * 100 + i,
+                keyword: e.name,
+                url: makeEmoticonUrl(e.id, 'raw300.gif'),
+                preview: makeEmoticonUrl(e.id, '300x300.png'),
+                animated: false,
+            },
+    );
+    const archiveDir = path.join(os.tmpdir(), crypto.randomUUID());
+    const archiveEmoticonDir = path.join(archiveDir, 'emoticon');
+    await fs.promises.mkdir(archiveEmoticonDir, { recursive: true });
 
-// 根据表情包 ID 获取表情包信息
-export const fetchEmoticon = (emoticonId: number) =>
-    wretch(
-        `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}.json`,
-        // `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}_android.json`,
-        // `https://i.gtimg.cn/club/item/parcel/${emoticonId % 10}/${emoticonId}_ios.json`
-    )
+    // 下载表情包图标
+    await wretch(emoticon.icon)
         .get()
-        .json<EmoticonMetadata>()
-        .then(r => parseEmoticonMetadata(emoticonId, r));
+        .res(r =>
+            r.body?.pipeTo(
+                stream.Writable.toWeb(
+                    fs.createWriteStream(path.join(archiveDir, 'icon.png')),
+                ),
+            ),
+        );
 
-// 根据表情包信息信息下载表情包，对 PNG 或 GIF 进行压缩，然后打包为 ZIP 压缩包
-export const archiveEmoticon = async (
-    emoticon: Emoticon,
-    archivePath: string,
-) => {
+    // 下载表情包
     const downloadLimit = pLimit(4);
-    const images = await Promise.all(
-        [
-            { keyword: '', src: emoticon.icon, isIcon: true },
-            ...emoticon.images.map(e => ({ ...e, isIcon: false })),
-        ].map(e =>
+    await Promise.all(
+        emoticonImages.map(e =>
             downloadLimit(async () => {
-                const file = path.join(os.tmpdir(), crypto.randomUUID());
-                console.log(
-                    'Archiving emoticon',
-                    emoticon.emoticonId,
-                    'Download',
-                    e.src,
-                    'to',
-                    file,
-                );
-                await wretch(e.src)
+                let data = await wretch(e.url)
                     .get()
-                    .res(r =>
-                        r.body?.pipeTo(
-                            stream.Writable.toWeb(fs.createWriteStream(file)),
-                        ),
-                    );
-                return {
-                    keyword: e.keyword,
-                    file,
-                    size: (await fs.promises.stat(file)).size,
-                    isIcon: e.isIcon,
-                };
+                    .res(r => r.arrayBuffer());
+                e.animated = isAnimatedGIF(data);
+                if (!e.animated) {
+                    e.url = e.url.replace(/\/raw300\.gif/g, '/300x300.png');
+                    e.preview = null;
+                    data = await wretch(e.url)
+                        .get()
+                        .res(r => r.arrayBuffer());
+                }
+                await fs.promises.writeFile(
+                    path.join(
+                        archiveEmoticonDir,
+                        `${e.keyword}.${e.animated ? 'gif' : 'png'}`,
+                    ),
+                    new Uint8Array(data),
+                );
             }),
         ),
     );
-    const zip = new AdmZip();
-    const root = `${emoticon.emoticonId} - ${emoticon.name}`;
 
+    // 压缩表情包图片
     const optimizeStart = performance.now();
-    if (config.optimize.gif && emoticon.animated) {
+    if (config.optimize.gif) {
         const gifLimit = pLimit(os.availableParallelism());
+        const entries = await fg.glob(
+            path.join(archiveDir, '**', '*.gif').replaceAll(path.sep, '/'),
+        );
         await Promise.all(
-            images
-                .filter(e => !e.isIcon)
-                .map(e =>
-                    gifLimit(async () => {
-                        await execa(
-                            'gifsicle',
-                            [
-                                ...(config.optimize.gif.verbose
-                                    ? ['--verbose']
-                                    : []),
-                                '--optimize=3',
-                                ...(config.optimize.gif.lossy
-                                    ? [
-                                          `--lossy${typeof config.optimize.gif.lossy === 'number' ? `=${config.optimize.gif.lossy}` : ''}`,
-                                      ]
-                                    : []),
-                                '--output',
-                                e.file,
-                                e.file,
-                            ],
-                            { stdout: 'inherit', stderr: 'inherit' },
-                        );
-                        const sizeOptimized = (await fs.promises.stat(e.file))
-                            .size;
-                        console.log(
-                            'Archiving emoticon',
-                            emoticon.emoticonId,
-                            'Optimized GIF',
-                            e.file,
-                            'from',
-                            e.size,
-                            'to',
-                            sizeOptimized,
-                            `(${((sizeOptimized / e.size - 1) * 100).toFixed(2)}%)`,
-                        );
-                    }),
-                ),
+            entries.map(e =>
+                gifLimit(async () => {
+                    const sizeBefore = await fs.promises
+                        .stat(e)
+                        .then(r => r.size);
+                    await execa(
+                        'gifsicle',
+                        [
+                            ...(config.optimize.gif.verbose
+                                ? ['--verbose']
+                                : []),
+                            '--optimize=3',
+                            ...(config.optimize.gif.lossy
+                                ? [
+                                      `--lossy${typeof config.optimize.gif.lossy === 'number' ? `=${config.optimize.gif.lossy}` : ''}`,
+                                  ]
+                                : []),
+                            '--output',
+                            e,
+                            e,
+                        ],
+                        { stdout: 'inherit', stderr: 'inherit' },
+                    );
+                    const sizeAfter = await fs.promises
+                        .stat(e)
+                        .then(r => r.size);
+                    console.log(
+                        'Archiving emoticon',
+                        emoticon.emoticonId,
+                        'Optimized GIF',
+                        e,
+                        'from',
+                        sizeBefore,
+                        'to',
+                        sizeAfter,
+                        `(${((sizeAfter / sizeBefore - 1) * 100).toFixed(2)}%)`,
+                    );
+                }),
+            ),
         );
     }
     if (config.optimize.png) {
-        const pngs = images.filter(e => !emoticon.animated || e.isIcon);
-        const sizeBefore = pngs.reduce((a, c) => a + c.size, 0);
+        const entries = await fg.glob(
+            path.join(archiveDir, '**', '*.png').replaceAll(path.sep, '/'),
+        );
+        const sizeBefore = await Promise.all(
+            entries.map(e => fs.promises.stat(e).then(r => r.size)),
+        ).then(r => r.reduce((a, c) => a + c, 0));
         await execa(
             'oxipng',
             [
@@ -175,23 +182,23 @@ export const archiveEmoticon = async (
                               : []),
                       ]
                     : []),
-                ...pngs.map(e => e.file),
+                ...entries,
             ],
             { stdout: 'inherit', stderr: 'inherit' },
         );
-        const sizeOptimized = (
-            await Promise.all(pngs.map(e => fs.promises.stat(e.file)))
-        ).reduce((a, c) => a + c.size, 0);
+        const sizeAfter = await Promise.all(
+            entries.map(e => fs.promises.stat(e).then(r => r.size)),
+        ).then(r => r.reduce((a, c) => a + c, 0));
         console.log(
             'Archiving emoticon',
             emoticon.emoticonId,
             'Optimized PNG',
-            pngs.length,
+            entries.length,
             'files from',
             sizeBefore,
             'to',
-            sizeOptimized,
-            `(${((sizeOptimized / sizeBefore - 1) * 100).toFixed(2)}%)`,
+            sizeAfter,
+            `(${((sizeAfter / sizeBefore - 1) * 100).toFixed(2)}%)`,
         );
     }
     const optimizeEnd = performance.now();
@@ -201,32 +208,48 @@ export const archiveEmoticon = async (
         'seconds',
     );
 
-    for (const image of images) {
-        await new Promise((resolve, reject) =>
-            zip.addLocalFileAsync(
-                {
-                    localPath: image.file,
-                    zipPath: image.isIcon ? root : path.join(root, 'emoticon'),
-                    zipName: image.isIcon
-                        ? 'icon.png'
-                        : `${image.keyword}.${emoticon.animated ? 'gif' : 'png'}`,
-                },
-                (err, done) => (err ? reject(err) : resolve(done)),
-            ),
-        );
-        await fs.promises.unlink(image.file);
-    }
-    zip.addFile(
-        path.join(root, 'metadata.json'),
-        Buffer.from(JSON.stringify(emoticon.metadata, null, 2)),
+    // 打包为 ZIP 压缩包
+    const archive = new AdmZip();
+    const root = `${emoticon.emoticonId} - ${emoticon.name}`;
+    const entries = await fg.glob(
+        path.join('**', '*').replaceAll(path.sep, '/'),
+        { cwd: archiveDir },
     );
-    await zip.writeZipPromise(archivePath);
+    await Promise.all(
+        entries.map(
+            e =>
+                new Promise((resolve, reject) =>
+                    archive.addLocalFileAsync(
+                        {
+                            localPath: path.join(archiveDir, e),
+                            zipPath: root,
+                            zipName: e,
+                        },
+                        (err, done) => (err ? reject(err) : resolve(done)),
+                    ),
+                ),
+        ),
+    );
+    archive.addFile(
+        path.join(root, 'metadata.json'),
+        Buffer.from(JSON.stringify(metadata, null, 2)),
+    );
+    const archivePath = `${archiveDir}.zip`;
+    await archive.writeZipPromise(archivePath);
+    await fs.promises.rm(archiveDir, { recursive: true });
+    const archiveSize = await fs.promises.stat(archivePath).then(r => r.size);
     console.log(
         'Archiving emoticon',
         emoticon.emoticonId,
         'Saved archive in',
         archivePath,
         'Size:',
-        (await fs.promises.stat(archivePath)).size,
+        archiveSize,
     );
+
+    emoticon.animated = emoticonImages.some(e => e.animated);
+    emoticon.archiveUrl = archivePath;
+    emoticon.archiveSize = archiveSize;
+
+    return [emoticon, emoticonImages];
 };
