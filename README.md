@@ -28,11 +28,6 @@ mkdir database
 node --run generate
 node --run migrate
 
-# 使用 sqlite-zstd 压缩数据库（可选）
-# https://github.com/phiresky/sqlite-zstd
-# 将 sqlite_zstd.dll 或 libsqlite_zstd.so 放入 database 目录
-pnpm exec tsx scripts/database-compression.ts
-
 # 运行
 node --run build
 node dist/index.js
