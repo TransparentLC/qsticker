@@ -59,6 +59,8 @@ export default defineConfig({
         outDir: '../public',
         emptyOutDir: true,
         chunkSizeWarningLimit: Infinity,
+        minify: 'oxc',
+        cssMinify: 'lightningcss',
         target: 'esnext',
         rollupOptions: {
             plugins: [
