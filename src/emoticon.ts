@@ -52,6 +52,7 @@ export const archiveEmoticon = async (
         animated: false,
         archiveSize: NaN,
         archiveUrl: '',
+        extra: null,
     };
     const emoticonImages = metadata.imgs.map(
         (e, i) =>

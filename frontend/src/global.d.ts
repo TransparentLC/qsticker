@@ -15,3 +15,6 @@ interface Window {
         };
     };
 }
+
+// biome-ignore lint/correctness/noUnusedVariables: no reason
+type EmoticonSource = 'qq';

@@ -1,4 +1,4 @@
-import { count, desc, eq, like, sql } from 'drizzle-orm';
+import { and, count, desc, eq, like, or, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 import { z } from 'zod';
@@ -22,11 +22,12 @@ app.get(
                             z.object({
                                 emoticonId: z.number().describe('表情包 ID'),
                                 name: z.string().describe('表情包名称'),
-                                description: z.string().describe('表情包说明'),
+                                description: z.string().describe('表情包简介'),
                                 icon: z.url().describe('图标 URL'),
                                 updateTime: z.iso
                                     .datetime()
                                     .describe('更新时间（ISO 8601）'),
+                                source: z.enum(['qq']).describe('表情包出处'),
                                 archiveUrl: z.url().describe('打包下载 URL'),
                                 archiveSize: z
                                     .number()
@@ -39,15 +40,13 @@ app.get(
                                         z.object({
                                             keyword: z
                                                 .string()
-                                                .describe('表情备注'),
+                                                .describe('表情关键词'),
                                             url: z
                                                 .url()
                                                 .describe('表情图片 URL'),
                                             preview: z
                                                 .url()
-                                                .describe(
-                                                    '预览图片 URL，即使是动态表情此处也会使用静态图片',
-                                                ),
+                                                .describe('预览图片 URL'),
                                             animated: z
                                                 .boolean()
                                                 .describe('是否为动态表情'),
@@ -131,7 +130,7 @@ app.get(
                                         name: z.string().describe('表情包名称'),
                                         description: z
                                             .string()
-                                            .describe('表情包说明'),
+                                            .describe('表情包简介'),
                                         icon: z.url().describe('图标 URL'),
                                         updateTime: z.iso
                                             .datetime()
@@ -160,7 +159,21 @@ app.get(
     validator(
         'query',
         z.object({
-            keyword: z.string().optional().describe('搜索关键词'),
+            keyword: z.string().trim().optional().describe('搜索关键词'),
+            name: z
+                .stringbool()
+                .optional()
+                .default(true)
+                .describe('是否在表情包名称中搜索关键词'),
+            description: z
+                .stringbool()
+                .optional()
+                .default(false)
+                .describe('是否在表情包简介中搜索关键词'),
+            animated: z
+                .stringbool()
+                .optional()
+                .describe('是否只搜索动态/静态表情包'),
             page: z.coerce
                 .number()
                 .int()
@@ -173,15 +186,26 @@ app.get(
     etag(),
     async ctx => {
         const query = ctx.req.valid('query');
+        const where = and(
+            query.keyword && (query.name || query.description)
+                ? or(
+                      query.name
+                          ? like(emoticon.name, `%${query.keyword}%`)
+                          : undefined,
+                      query.description
+                          ? like(emoticon.description, `%${query.keyword}%`)
+                          : undefined,
+                  )
+                : undefined,
+            query.animated !== undefined
+                ? eq(emoticon.animated, query.animated)
+                : undefined,
+        );
         // biome-ignore lint/style/noNonNullAssertion: count(*)必定存在
         const rowCount = db
             .select({ count: count() })
             .from(emoticon)
-            .where(
-                query.keyword
-                    ? like(emoticon.name, `%${query.keyword}%`)
-                    : undefined,
-            )
+            .where(where)
             .get()!.count;
         const result = db
             .select({
@@ -196,11 +220,7 @@ app.get(
                 animated: emoticon.animated,
             })
             .from(emoticon)
-            .where(
-                query.keyword
-                    ? like(emoticon.name, `%${query.keyword}%`)
-                    : undefined,
-            )
+            .where(where)
             .orderBy(desc(emoticon.updateTime))
             .limit(10)
             .offset((query.page - 1) * 10)

@@ -12,6 +12,7 @@ export const emoticon = sqliteTable('emoticon', {
     animated: integer('animated', { mode: 'boolean' }).notNull(),
     archiveUrl: text('archive_url').notNull(),
     archiveSize: integer('archive_size').notNull(),
+    extra: text('extra'),
 });
 
 export const emoticonImage = sqliteTable('emoticon_image', {
