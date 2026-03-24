@@ -37,7 +37,13 @@ export const validator: typeof zValidator = (target, schema, hook) =>
             ((result, ctx) => {
                 if (!result.success)
                     return ctx.json(
-                        { error: fromError(result.error).toString() },
+                        {
+                            // https://github.com/causaly/zod-validation-error/blob/main/lib/v4/isZodErrorLike.ts
+                            error: fromError({
+                                name: 'ZodError',
+                                issues: result.error,
+                            }).toString(),
+                        },
                         400,
                     );
             }),
