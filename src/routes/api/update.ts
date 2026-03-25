@@ -9,11 +9,11 @@ import cron from 'node-cron';
 import pLimit from 'p-limit';
 import type { WretchError } from 'wretch';
 import { z } from 'zod';
-import config from '../config';
-import db from '../database';
-import { archiveEmoticon } from '../emoticon';
-import { validator } from '../middlewares';
-import { emoticon, emoticonImage } from '../schema';
+import config from '../../config';
+import db from '../../database';
+import { archiveEmoticon } from '../../emoticon';
+import { validator } from '../../middlewares';
+import { emoticon, emoticonImage } from '../../schema';
 
 const ensureAdmin: MiddlewareHandler = async (ctx, next) => {
     if (

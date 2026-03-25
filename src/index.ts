@@ -3,13 +3,12 @@ import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Scalar } from '@scalar/hono-api-reference';
 import { Hono } from 'hono';
-import { proxy } from 'hono/proxy';
 import type { HTTPResponseError } from 'hono/types';
-import type { ContentfulStatusCode, StatusCode } from 'hono/utils/http-status';
+import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import { openAPIRouteHandler } from 'hono-openapi';
 import config from './config';
 import { etag, logger } from './middlewares';
-import apiRoutes from './routes';
+import routes from './routes';
 
 if (!fs.existsSync('storage')) fs.mkdirSync('storage');
 
@@ -25,41 +24,7 @@ app.use(logger)
         }
         return ctx.json({ error: err.message }, statusCode);
     })
-    .route('/api', apiRoutes)
-    .get(
-        '/parcel/:md5{[\\da-f]{32}|\\d{6}}/:filename{126x126\\.png|200x200\\.png|300x300\\.png|raw200\\.gif|raw300\\.gif}',
-        etag(),
-        async ctx => {
-            const r = await proxy(
-                ctx.req.param('md5').length === 32
-                    ? `https://i.gtimg.cn/club/item/parcel/item/${ctx.req.param('md5').substring(0, 2)}/${ctx.req.param('md5')}/${ctx.req.param('filename')}`
-                    : `https://i.gtimg.cn/club/item/parcel/img/parcel/${ctx.req.param('md5').substring(5, 6)}/${ctx.req.param('md5')}/${ctx.req.param('filename')}`,
-            );
-            if (r.status === 200) {
-                r.headers.set(
-                    'Cache-Control',
-                    'public, immutable, max-age=604800',
-                );
-                [
-                    'Alt-Svc',
-                    'Server',
-                    'Vary',
-                    'X-Cache-Lookup',
-                    'X-Datasrc',
-                    'X-Nws-Log-Uuid',
-                    'X-Reqgue',
-                ].forEach(e => {
-                    r.headers.delete(e);
-                });
-                return r;
-            }
-            if (r.status === 404) return ctx.notFound();
-            return ctx.body(
-                null,
-                r.status >= 400 ? (r.status as StatusCode) : 500,
-            );
-        },
-    )
+    .route('/', routes)
     .use(
         '/storage/*',
         etag(),

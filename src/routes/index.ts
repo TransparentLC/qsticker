@@ -1,10 +1,6 @@
 import { Hono } from 'hono';
 
-import emoticon from './emoticon';
-import emoticonImage from './emoticon-image';
-import update from './update';
+import api from './api';
+import proxy from './proxy';
 
-export default new Hono<HonoSchema>()
-    .route('/emoticon', emoticon)
-    .route('/emoticon/update', update)
-    .route('/emoticon-image', emoticonImage);
+export default new Hono<HonoSchema>().route('/api', api).route('/proxy', proxy);

@@ -2,10 +2,10 @@ import { and, count, desc, eq, like, or, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
 import { z } from 'zod';
-import config from '../config';
-import db from '../database';
-import { etag, validator } from '../middlewares';
-import { emoticon, emoticonImage } from '../schema';
+import config from '../../config';
+import db from '../../database';
+import { etag, validator } from '../../middlewares';
+import { emoticon, emoticonImage } from '../../schema';
 
 const app = new Hono<HonoSchema>();
 
