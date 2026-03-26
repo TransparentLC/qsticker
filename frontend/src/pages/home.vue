@@ -320,7 +320,7 @@ const searchEmoticonImages = async (resetPage: boolean = false) => {
                 };
             }[];
         }>();
-    if (resetPage) pageEmoticons.value = 1;
+    if (resetPage) pageEmoticonImages.value = 1;
     emoticonImages.value = r.result.map(e => {
         e.emoticon.updateTime = new Date(e.emoticon.updateTime);
         return e;
