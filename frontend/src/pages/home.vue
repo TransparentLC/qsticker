@@ -357,5 +357,5 @@ watch(keywordEmoticonImage, () => {
     if (!keywordEmoticonImage.value) showEmoticonImagePlaceholder.value = true;
 });
 watch(pageEmoticons, () => searchEmoticons());
-watch(pageCountEmoticonImages, () => searchEmoticonImages());
+watch(pageEmoticonImages, () => searchEmoticonImages());
 </script>
