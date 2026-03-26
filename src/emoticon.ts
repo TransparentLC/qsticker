@@ -544,14 +544,18 @@ export const fetchEmoticonsWithCheck = (
                 });
             } catch (e) {
                 if ((e as WretchError)?.status === 404) {
-                    updateLogger.error(e);
                     return fetchEmoticonResultsAppend({
                         emoticonId,
                         source,
                         result: 'notfound',
                     });
                 } else {
-                    updateLogger.error(e);
+                    updateLogger.error(
+                        'Error on updating emoticon %d (%s): %s',
+                        emoticonId,
+                        source,
+                        e,
+                    );
                     return fetchEmoticonResultsAppend({
                         emoticonId,
                         source,
