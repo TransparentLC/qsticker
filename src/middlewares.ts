@@ -3,28 +3,34 @@ import { etag as honoEtag } from 'hono/etag';
 import { createMiddleware } from 'hono/factory';
 import { validator as zValidator } from 'hono-openapi';
 import { fromError } from 'zod-validation-error';
+import createLogger from './logger';
+
+const httpLogger = createLogger('http');
 
 export const logger = createMiddleware(async (ctx, next) => {
     const startTime = performance.now();
 
     await next();
 
-    const statusCode = ctx.res.status;
-    const statusString = process.env.NO_COLOR
-        ? statusCode.toString()
-        : `\x1b[${[39, 94, 92, 96, 93, 91, 95][(statusCode / 100) | 0]}m${statusCode}\x1b[0m`;
-    const remoteAddress =
-        ctx.req.header('X-Real-IP') ??
-        ctx.req.header('X-Forwarded-For')?.split(',').pop()?.trim() ??
-        ctx.env?.incoming.socket.remoteAddress;
-    console.log(
-        new Date().toISOString(),
-        '-',
-        remoteAddress,
-        ctx.req.method,
-        ctx.req.path,
-        statusString,
-        `${(performance.now() - startTime).toFixed(2)}ms`,
+    httpLogger.info(
+        {
+            http: {
+                remoteAddress:
+                    ctx.req.header('X-Real-IP') ??
+                    ctx.req
+                        .header('X-Forwarded-For')
+                        ?.split(',')
+                        .pop()
+                        ?.trim() ??
+                    ctx.env.incoming.socket.remoteAddress,
+                remotePort: ctx.env.incoming.socket.remotePort,
+                method: ctx.req.method,
+                path: ctx.req.path,
+                status: ctx.res.status,
+                time: performance.now() - startTime,
+            },
+        },
+        '',
     );
 });
 

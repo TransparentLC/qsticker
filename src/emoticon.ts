@@ -14,6 +14,7 @@ import type { WretchError } from 'wretch';
 import wretch from 'wretch';
 import config from './config';
 import db from './database';
+import createLogger from './logger';
 import {
     emoticon,
     emoticonImage,
@@ -23,6 +24,9 @@ import {
 
 type Emoticon = typeof emoticonSchema.$inferSelect;
 type EmoticonImage = typeof emoticonImageSchema.$inferSelect;
+
+const emoticonLogger = createLogger('emoticon');
+const updateLogger = createLogger('update');
 
 const httpLimit = pLimit(32);
 const cpuLimit = pLimit(os.availableParallelism());
@@ -38,6 +42,8 @@ export const archiveEmoticon = async (
     emoticonId: number,
     source: EmoticonSource,
 ): Promise<[Emoticon, EmoticonImage[]]> => {
+    emoticonLogger.info('Archiving emoticon %d (%s)', emoticonId, source);
+
     // 解析表情包信息
     let emoticon: Emoticon;
     let emoticonImages: EmoticonImage[];
@@ -301,16 +307,14 @@ export const archiveEmoticon = async (
                     const sizeAfter = await fs.promises
                         .stat(e)
                         .then(r => r.size);
-                    console.log(
-                        'Archiving emoticon',
-                        emoticon.emoticonId,
-                        'Optimized GIF',
+                    emoticonLogger.info(
+                        'Archiving emoticon %d (%s) Optimized GIF %s from %d to %d (Saved %s%%)',
+                        emoticonId,
+                        source,
                         e,
-                        'from',
                         sizeBefore,
-                        'to',
                         sizeAfter,
-                        `(${((sizeAfter / sizeBefore - 1) * 100).toFixed(2)}%)`,
+                        ((1 - sizeAfter / sizeBefore) * 100).toFixed(2),
                     );
                 }),
             ),
@@ -358,26 +362,25 @@ export const archiveEmoticon = async (
                     const sizeAfter = await fs.promises
                         .stat(e)
                         .then(r => r.size);
-                    console.log(
-                        'Archiving emoticon',
-                        emoticon.emoticonId,
-                        'Optimized PNG',
+                    emoticonLogger.info(
+                        'Archiving emoticon %d (%s) Optimized PNG %s from %d to %d (Saved %s%%)',
+                        emoticonId,
+                        source,
                         e,
-                        'from',
                         sizeBefore,
-                        'to',
                         sizeAfter,
-                        `(${((sizeAfter / sizeBefore - 1) * 100).toFixed(2)}%)`,
+                        ((1 - sizeAfter / sizeBefore) * 100).toFixed(2),
                     );
                 }),
             ),
         );
     }
     const optimizeEnd = performance.now();
-    console.log(
-        'Optimized in',
+    emoticonLogger.info(
+        'Optimized emoticon %d (%s) in %ds',
+        emoticonId,
+        source,
         (optimizeEnd - optimizeStart) / 1000,
-        'seconds',
     );
 
     // 打包为 ZIP 压缩包
@@ -410,12 +413,11 @@ export const archiveEmoticon = async (
     await archive.writeZipPromise(archivePath);
     await fs.promises.rm(archiveDir, { recursive: true });
     const archiveSize = await fs.promises.stat(archivePath).then(r => r.size);
-    console.log(
-        'Archiving emoticon',
-        emoticon.emoticonId,
-        'Saved archive in',
+    emoticonLogger.info(
+        'Archiving emoticon %d (%s) Saved archive in %s Size: %d',
+        emoticonId,
+        source,
         archivePath,
-        'Size:',
         archiveSize,
     );
 
@@ -476,6 +478,11 @@ export const fetchEmoticonsWithCheck = (
                             () => false,
                         )))
             ) {
+                updateLogger.info(
+                    'Already archived emoticon %d (%s)',
+                    emoticonId,
+                    source,
+                );
                 return fetchEmoticonResultsAppend({
                     emoticonId,
                     source,
@@ -525,6 +532,11 @@ export const fetchEmoticonsWithCheck = (
                     .run();
                 db.insert(emoticon).values(metadata).run();
                 db.insert(emoticonImage).values(images).run();
+                updateLogger.info(
+                    'Updated emoticon %d (%s)',
+                    emoticonId,
+                    source,
+                );
                 return fetchEmoticonResultsAppend({
                     emoticonId,
                     source,
@@ -532,14 +544,14 @@ export const fetchEmoticonsWithCheck = (
                 });
             } catch (e) {
                 if ((e as WretchError)?.status === 404) {
-                    console.log(e);
+                    updateLogger.error(e);
                     return fetchEmoticonResultsAppend({
                         emoticonId,
                         source,
                         result: 'notfound',
                     });
                 } else {
-                    console.log(e);
+                    updateLogger.error(e);
                     return fetchEmoticonResultsAppend({
                         emoticonId,
                         source,
@@ -566,7 +578,12 @@ export const emoticonUpdateTrigger = async (source: EmoticonSource) => {
                 .get()!.emoticonId!;
             const from = emoticonId - config.update.range.qq;
             const to = emoticonId + config.update.range.qq;
-            console.log('Cron update QQ emoticon from', from, 'to', to);
+            updateLogger.info(
+                'Update emoticon source %s from %d to %d',
+                source,
+                from,
+                to,
+            );
             fetchEmoticonsWithCheck(
                 Array(to - from + 1)
                     .fill(0)
@@ -586,7 +603,12 @@ export const emoticonUpdateTrigger = async (source: EmoticonSource) => {
                 .get()!.actId!;
             const from = actId - config.update.range.bilibili;
             const to = actId + config.update.range.bilibili;
-            console.log('Cron update bilibili emoticon from', from, 'to', to);
+            updateLogger.info(
+                'Update emoticon source %s from %d to %d',
+                source,
+                from,
+                to,
+            );
             const emoticonId = await Promise.all(
                 Array(to - from + 1)
                     .fill(0)
@@ -634,7 +656,11 @@ export const emoticonUpdateTrigger = async (source: EmoticonSource) => {
 };
 
 if (config.update.cron) {
-    console.log('Cron update emoticon', config.update.cron);
-    cron.schedule(config.update.cron, () => emoticonUpdateTrigger('qq'));
-    cron.schedule(config.update.cron, () => emoticonUpdateTrigger('bilibili'));
+    updateLogger.info('Cron update emoticon at %s', config.update.cron);
+    for (const source of ['qq', 'bilibili'] as EmoticonSource[]) {
+        cron.schedule(config.update.cron, () => {
+            updateLogger.info('Cron update emoticon source %s', source);
+            emoticonUpdateTrigger(source);
+        });
+    }
 }

@@ -7,12 +7,14 @@ import type { HTTPResponseError } from 'hono/types';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import { openAPIRouteHandler } from 'hono-openapi';
 import config from './config';
+import createLogger from './logger';
 import { etag, logger } from './middlewares';
 import routes from './routes';
 
 if (!fs.existsSync('storage')) fs.mkdirSync('storage');
 
 const app = new Hono<HonoSchema>().basePath(config.server.base);
+const appLogger = createLogger('app');
 
 app.use(logger)
     .onError((err, ctx) => {
@@ -75,10 +77,10 @@ if (
 }
 
 serve({
-    fetch: req => {
+    fetch: (req, env) => {
         const url = new URL(req.url);
         url.protocol = req.headers.get('x-forwarded-proto') ?? url.protocol;
-        return app.fetch(new Request(url, req));
+        return app.fetch(new Request(url, req), env);
     },
     hostname: config.server.host,
     port: config.server.port,
@@ -88,4 +90,8 @@ if (typeof config.server.port === 'string') {
     fs.chmodSync(config.server.port, 666);
 }
 
-console.log(`Server is running on ${config.server.host}:${config.server.port}`);
+appLogger.info(
+    'Server is running on %s:%s',
+    config.server.host,
+    config.server.port,
+);
