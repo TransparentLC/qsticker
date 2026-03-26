@@ -17,6 +17,7 @@ export default defineConfig({
         proxy: {
             '/api': 'http://localhost:4000',
             '/docs': 'http://localhost:4000',
+            '/proxy': 'http://localhost:4000',
             '/openapi.json': 'http://localhost:4000',
             '/storage': 'http://localhost:4000',
         },

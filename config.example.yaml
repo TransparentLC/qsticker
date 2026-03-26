@@ -27,9 +27,12 @@ optimize:
     lossy: true
 update:
   # 自动爬取新表情包的 cron 表达式
+  # 留空则禁用自动爬取，但是仍然可以通过 API 启动爬取
   cron: 0 */4 * * *
-  # 爬取范围（最新的表情包 ID 加上和减去这个值）
-  range: 50
+  # 爬取范围（最新的表情包/收藏集 ID 加上和减去这个值）
+  range:
+    qq: 50
+    bilibili: 20
   # 用于产生表情包存储路径的盐，设定后不应该修改
   salt: urRD0yMCWrDhFihNObTXRnmZ8mSUWpxp
   # 要求请求头包含 Authorization: Bearer {token} 才能使用 API 触发更新

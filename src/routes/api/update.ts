@@ -1,19 +1,14 @@
-import crypto from 'node:crypto';
-import fs from 'node:fs';
-import path from 'node:path';
-import { eq, max, or } from 'drizzle-orm';
 import type { MiddlewareHandler } from 'hono';
 import { Hono } from 'hono';
 import { describeRoute, resolver } from 'hono-openapi';
-import cron from 'node-cron';
-import pLimit from 'p-limit';
-import type { WretchError } from 'wretch';
 import { z } from 'zod';
 import config from '../../config';
-import db from '../../database';
-import { archiveEmoticon } from '../../emoticon';
+import {
+    emoticonUpdateTrigger,
+    fetchEmoticonResults,
+    fetchEmoticonsWithCheck,
+} from '../../emoticon';
 import { validator } from '../../middlewares';
-import { emoticon, emoticonImage } from '../../schema';
 
 const ensureAdmin: MiddlewareHandler = async (ctx, next) => {
     if (
@@ -26,140 +21,6 @@ const ensureAdmin: MiddlewareHandler = async (ctx, next) => {
 
 const app = new Hono<HonoSchema>();
 app.use(ensureAdmin);
-
-type FetchEmoticonResult = {
-    time: Date;
-    emoticonId: number;
-    result: 'fetched' | 'unchanged' | 'notfound' | 'failed';
-};
-
-const fetchEmoticonResults: FetchEmoticonResult[] = [];
-const fetchEmoticonResultsAppend = (
-    result: Omit<FetchEmoticonResult, 'time'>,
-) => {
-    while (fetchEmoticonResults.length > 50) fetchEmoticonResults.pop();
-    fetchEmoticonResults.unshift({ time: new Date(), ...result });
-};
-
-const fetchEmoticonLimit = pLimit(4);
-
-const fetchEmoticonWithCheck = async (
-    emoticonIds: number[],
-    force: boolean,
-) => {
-    return await Promise.all(
-        emoticonIds.map(emoticonId =>
-            fetchEmoticonLimit(async () => {
-                const metadataCheckFetched = db
-                    .select({ archiveUrl: emoticon.archiveUrl })
-                    .from(emoticon)
-                    .where(eq(emoticon.emoticonId, emoticonId))
-                    .get();
-                if (
-                    metadataCheckFetched &&
-                    !force &&
-                    (metadataCheckFetched.archiveUrl.match(/^https?:\/\//) ||
-                        (await fs.promises
-                            .access(metadataCheckFetched.archiveUrl)
-                            .then(
-                                () => true,
-                                () => false,
-                            )))
-                ) {
-                    return fetchEmoticonResultsAppend({
-                        emoticonId,
-                        result: 'unchanged',
-                    });
-                }
-                try {
-                    const [metadata, images] =
-                        await archiveEmoticon(emoticonId);
-                    const archiveHash = crypto
-                        .createHmac('sha256', config.update.salt)
-                        .update(`${emoticonId}#${metadata.name}`)
-                        .digest()
-                        .toString('hex');
-                    const archivePath = path.join(
-                        'storage',
-                        archiveHash.substring(0, 2),
-                        `${archiveHash}.zip`,
-                    );
-                    await fs.promises.mkdir(path.dirname(archivePath), {
-                        recursive: true,
-                    });
-                    try {
-                        await fs.promises.rename(
-                            metadata.archiveUrl,
-                            archivePath,
-                        );
-                    } catch (err) {
-                        if ((err as NodeJS.ErrnoException).code !== 'EXDEV')
-                            throw err;
-                        await fs.promises.copyFile(
-                            metadata.archiveUrl,
-                            archivePath,
-                        );
-                        await fs.promises.rm(metadata.archiveUrl);
-                    }
-                    metadata.archiveUrl = `${archivePath.replaceAll(path.sep, '/')}`;
-                    db.delete(emoticonImage)
-                        .where(
-                            or(
-                                ...images.map(e =>
-                                    eq(
-                                        emoticonImage.emoticonImageId,
-                                        e.emoticonImageId,
-                                    ),
-                                ),
-                            ),
-                        )
-                        .run();
-                    db.delete(emoticon)
-                        .where(eq(emoticon.emoticonId, emoticonId))
-                        .run();
-                    db.insert(emoticon).values(metadata).run();
-                    db.insert(emoticonImage).values(images).run();
-                    return fetchEmoticonResultsAppend({
-                        emoticonId,
-                        result: 'fetched',
-                    });
-                } catch (e) {
-                    if ((e as WretchError)?.status === 404) {
-                        console.log(e);
-                        return fetchEmoticonResultsAppend({
-                            emoticonId,
-                            result: 'notfound',
-                        });
-                    } else {
-                        console.log(e);
-                        return fetchEmoticonResultsAppend({
-                            emoticonId,
-                            result: 'failed',
-                        });
-                    }
-                }
-            }),
-        ),
-    );
-};
-
-cron.schedule(config.update.cron, () => {
-    // biome-ignore lint/style/noNonNullAssertion: max()必定存在
-    const emoticonId = db
-        .select({ emoticonId: max(emoticon.emoticonId) })
-        .from(emoticon)
-        .get()!.emoticonId!;
-    const from = emoticonId - config.update.range;
-    const to = emoticonId + config.update.range;
-    console.log('Cron update emoticon from', from, 'to', to);
-    fetchEmoticonWithCheck(
-        Array(to - from + 1)
-            .fill(0)
-            .map((_, i) => i + from),
-        false,
-    );
-});
-console.log('Cron update emoticon', config.update.cron);
 
 app.post(
     '/:emoticonId{\\d+}',
@@ -198,13 +59,17 @@ app.post(
                 .optional()
                 .default(false)
                 .describe('是否强制重新爬取已爬取过的表情包'),
+            source: z.enum(['qq', 'bilibili']).describe('爬取的表情包出处'),
         }),
     ),
     async ctx => {
         const param = ctx.req.valid('param');
         const query = ctx.req.valid('query');
         setImmediate(() =>
-            fetchEmoticonWithCheck([param.emoticonId], query.force),
+            fetchEmoticonsWithCheck(
+                [[param.emoticonId, query.source]],
+                query.force,
+            ),
         );
         return ctx.json({ message: 'Update task added' });
     },
@@ -263,6 +128,7 @@ app.post(
                 .optional()
                 .default(false)
                 .describe('是否强制重新爬取已爬取过的表情包'),
+            source: z.enum(['qq', 'bilibili']).describe('爬取的表情包出处'),
         }),
     ),
     async ctx => {
@@ -281,13 +147,46 @@ app.post(
                 400,
             );
         setImmediate(() =>
-            fetchEmoticonWithCheck(
+            fetchEmoticonsWithCheck(
                 Array(to - from + 1)
                     .fill(0)
-                    .map((_, i) => i + from),
+                    .map((_, i) => [i + from, query.source]),
                 query.force,
             ),
         );
+        return ctx.json({ message: 'Update tasks added' });
+    },
+);
+
+app.post(
+    '/trigger',
+    describeRoute({
+        description:
+            '根据最新爬取的表情包 ID 和设定的范围爬取最近更新的表情包。需要管理员 Token。',
+        responses: {
+            200: {
+                description: '',
+                content: {
+                    'application/json': {
+                        schema: resolver(
+                            z.object({
+                                message: z.literal('Update task added'),
+                            }),
+                        ),
+                    },
+                },
+            },
+        },
+    }),
+    validator(
+        'query',
+        z.object({
+            source: z.enum(['qq', 'bilibili']).describe('爬取的表情包出处'),
+        }),
+    ),
+    async ctx => {
+        const query = ctx.req.valid('query');
+        setImmediate(() => emoticonUpdateTrigger(query.source));
         return ctx.json({ message: 'Update tasks added' });
     },
 );
@@ -306,6 +205,7 @@ app.get(
                                 z.object({
                                     time: z.iso.datetime(),
                                     emoticonId: z.number(),
+                                    source: z.enum(['qq', 'bilibili']),
                                     result: z.enum([
                                         'fetched',
                                         'unchanged',

@@ -61,3 +61,12 @@ export const etag: typeof honoEtag = (options = {}) =>
         },
         ...options,
     });
+
+export const etagIfEmpty: typeof honoEtag = (options = {}) => {
+    const etagMiddleware = etag(options);
+    return async (ctx, next) => {
+        await next();
+        if (!ctx.res.headers.has('etag'))
+            await etagMiddleware(ctx, async () => {});
+    };
+};

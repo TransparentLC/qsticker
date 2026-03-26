@@ -4,7 +4,7 @@
             <n-skeleton v-if="loading" :width="96" :height="96" :sharp="false"></n-skeleton>
             <n-image
                 v-else
-                :src="icon"
+                :src="proxySrc(icon)"
                 width="96"
                 height="96"
                 preview-disabled
@@ -53,11 +53,19 @@
                              </n-dropdown>
                         </n-button-group>
                         <n-button
+                            v-if="source === 'qq'"
                             secondary
                             tag="a"
                             :href="`https://zb.vip.qq.com/hybrid/emoticonmall/detail?id=${route.params.emoticonId}`"
                             target="_blank"
                         >表情商城</n-button>
+                        <n-button
+                            v-if="source === 'bilibili'"
+                            secondary
+                            tag="a"
+                            :href="`https://www.bilibili.com/h5/mall/digital-card/home?navhide=1&hybrid_set_header=2&act_id=${extra!.actId}`"
+                            target="_blank"
+                        >查看收藏集</n-button>
                     </n-flex>
                 </template>
             </n-flex>
@@ -74,8 +82,8 @@
                         <n-image
                             width="100%"
                             :show-toolbar="false"
-                            :preview-src="e.url"
-                            :src="e.preview"
+                            :preview-src="proxySrc(e.url)"
+                            :src="proxySrc(e.preview)"
                             :alt="e.keyword"
                         ></n-image>
                     </template>
@@ -105,6 +113,7 @@ import { useRoute, useRouter } from 'vue-router';
 import wretch from 'wretch';
 import NMdi from '../components/mdi.vue';
 import formatSize from '../format-size';
+import proxySrc from '../proxy-src';
 
 const route = useRoute();
 const router = useRouter();
@@ -113,6 +122,8 @@ const loading = ref(false);
 const name = ref('');
 const description = ref('');
 const icon = ref('');
+const updateTime = ref(new Date());
+const source = ref('');
 const archiveUrl = ref('');
 const archiveSize = ref(0);
 const animated = ref(false);
@@ -124,6 +135,8 @@ const images = shallowRef<
         animated: boolean;
     }[]
 >([]);
+// biome-ignore lint/suspicious/noExplicitAny: explanation
+const extra = ref<any>(null);
 
 const update = async () => {
     loading.value = true;
@@ -134,6 +147,8 @@ const update = async () => {
             name: string;
             description: string;
             icon: string;
+            updateTime: string;
+            source: string;
             archiveUrl: string;
             archiveSize: number;
             animated: boolean;
@@ -143,14 +158,19 @@ const update = async () => {
                 preview: string;
                 animated: boolean;
             }[];
+            // biome-ignore lint/suspicious/noExplicitAny: explanation
+            extra: any;
         }>();
     name.value = r.name;
     description.value = r.description;
     icon.value = r.icon;
+    updateTime.value = new Date(r.updateTime);
+    source.value = r.source;
     archiveUrl.value = r.archiveUrl;
     archiveSize.value = r.archiveSize;
     animated.value = r.animated;
     images.value = r.images;
+    extra.value = r.extra;
     loading.value = false;
 };
 

@@ -48,7 +48,7 @@ app.use(logger)
             documentation: {
                 info: {
                     title: 'Qsticker Archive',
-                    version: '1.0.0',
+                    version: '2.0.0',
                     description:
                         '只有爬取表情包的相关 API 才需要管理员 Token。',
                 },

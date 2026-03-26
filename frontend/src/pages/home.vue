@@ -48,7 +48,7 @@
                         <n-list-item v-for="e in emoticons" @click="router.push(`/emoticon/${e.emoticonId}`)">
                             <template #prefix>
                                 <n-image
-                                    :src="e.icon"
+                                    :src="proxySrc(e.icon)"
                                     width="64"
                                     height="64"
                                     lazy
@@ -69,7 +69,7 @@
                             </template>
                             <n-thing
                                 :description="e.description"
-                                description-style="font-size:smaller"
+                                description-style="font-size:smaller;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2"
                             >
                                 <template #header>
                                     <n-flex align="center" size="small">
@@ -136,8 +136,8 @@
                                         <n-image
                                             width="100%"
                                             :show-toolbar="false"
-                                            :preview-src="e.url"
-                                            :src="e.preview"
+                                            :preview-src="proxySrc(e.url)"
+                                            :src="proxySrc(e.preview)"
                                             :alt="e.keyword"
                                         ></n-image>
                                         <div style="text-align:center;padding:.5em">
@@ -189,6 +189,7 @@ import wretch from 'wretch';
 import wretchQueryString from 'wretch/addons/queryString';
 import NMdi from '../components/mdi.vue';
 import formatSize from '../format-size';
+import proxySrc from '../proxy-src';
 import reactiveWindowSize from '../reactive-display';
 
 const router = useRouter();
@@ -331,7 +332,22 @@ const searchEmoticonImages = async (resetPage: boolean = false) => {
 onMounted(searchEmoticons);
 watch(
     [keywordEmoticon, description],
-    throttle(500, () => searchEmoticons(true), { noLeading: true }),
+    throttle(
+        500,
+        (
+            [keywordEmoticonBefore, descriptionBefore],
+            [keywordEmoticonAfter, descriptionAfter],
+        ) => {
+            if (
+                keywordEmoticonBefore === keywordEmoticonAfter &&
+                !keywordEmoticon.value &&
+                descriptionBefore !== descriptionAfter
+            )
+                return;
+            searchEmoticons(true);
+        },
+        { noLeading: true },
+    ),
 );
 watch(
     keywordEmoticonImage,

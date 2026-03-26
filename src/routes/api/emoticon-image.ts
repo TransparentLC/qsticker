@@ -52,7 +52,7 @@ app.get(
                                                         '表情包更新时间（ISO 8601）',
                                                     ),
                                                 source: z
-                                                    .enum(['qq'])
+                                                    .enum(['qq', 'bilibili'])
                                                     .describe('表情包出处'),
                                             })
                                             .describe('所属表情包信息'),

@@ -20,8 +20,11 @@ type Config = {
         };
     };
     update: {
-        cron: string;
-        range: number;
+        cron: string | null;
+        range: {
+            qq: number;
+            bilibili: number;
+        };
         salt: string;
         token?: string;
     };

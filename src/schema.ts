@@ -8,11 +8,13 @@ export const emoticon = sqliteTable('emoticon', {
     updateTime: text('update_time')
         .$defaultFn(() => new Date(0).toISOString())
         .notNull(),
-    source: text('source', { enum: ['qq'] }).notNull(),
+    source: text('source', { enum: ['qq', 'bilibili'] }).notNull(),
     animated: integer('animated', { mode: 'boolean' }).notNull(),
     archiveUrl: text('archive_url').notNull(),
     archiveSize: integer('archive_size').notNull(),
-    extra: text('extra'),
+    extra: text('extra', {
+        mode: 'json',
+    }).$type<EmoticonExtra.Bilibili | null>(),
 });
 
 export const emoticonImage = sqliteTable('emoticon_image', {

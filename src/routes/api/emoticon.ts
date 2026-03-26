@@ -27,7 +27,9 @@ app.get(
                                 updateTime: z.iso
                                     .datetime()
                                     .describe('更新时间（ISO 8601）'),
-                                source: z.enum(['qq']).describe('表情包出处'),
+                                source: z
+                                    .enum(['qq', 'bilibili'])
+                                    .describe('表情包出处'),
                                 archiveUrl: z.url().describe('打包下载 URL'),
                                 archiveSize: z
                                     .number()
@@ -53,6 +55,10 @@ app.get(
                                         }),
                                     )
                                     .describe('表情包图片信息'),
+                                extra: z
+                                    .object()
+                                    .nullable()
+                                    .describe('额外信息'),
                             }),
                         ),
                     },
@@ -80,6 +86,7 @@ app.get(
                 archiveUrl: emoticon.archiveUrl,
                 archiveSize: emoticon.archiveSize,
                 animated: emoticon.animated,
+                extra: emoticon.extra,
             })
             .from(emoticon)
             .where(eq(emoticon.emoticonId, param.emoticonId))
@@ -136,7 +143,7 @@ app.get(
                                             .datetime()
                                             .describe('更新时间（ISO 8601）'),
                                         source: z
-                                            .enum(['qq'])
+                                            .enum(['qq', 'bilibili'])
                                             .describe('表情包出处'),
                                         archiveUrl: z
                                             .url()
