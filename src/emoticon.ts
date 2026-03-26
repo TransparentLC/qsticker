@@ -28,6 +28,7 @@ type EmoticonImage = typeof emoticonImageSchema.$inferSelect;
 const emoticonLogger = createLogger('emoticon');
 const updateLogger = createLogger('update');
 
+const fetchEmoticonLimit = pLimit(4);
 const httpLimit = pLimit(32);
 const cpuLimit = pLimit(os.availableParallelism());
 
@@ -456,114 +457,119 @@ export const fetchEmoticonsWithCheck = (
     force: boolean,
 ) =>
     Promise.all(
-        emoticonIdSources.map(async ([emoticonId, source]) => {
-            const metadataCheckFetched = db
-                .select({ archiveUrl: emoticon.archiveUrl })
-                .from(emoticon)
-                .where(
-                    and(
-                        eq(emoticon.emoticonId, emoticonId),
-                        eq(emoticon.source, source),
-                    ),
-                )
-                .get();
-            if (
-                metadataCheckFetched &&
-                !force &&
-                (metadataCheckFetched.archiveUrl.match(/^https?:\/\//) ||
-                    (await fs.promises
-                        .access(metadataCheckFetched.archiveUrl)
-                        .then(
-                            () => true,
-                            () => false,
-                        )))
-            ) {
-                updateLogger.info(
-                    'Already archived emoticon %d (%s)',
-                    emoticonId,
-                    source,
-                );
-                return fetchEmoticonResultsAppend({
-                    emoticonId,
-                    source,
-                    result: 'unchanged',
-                });
-            }
-            try {
-                const [metadata, images] = await archiveEmoticon(
-                    emoticonId,
-                    source,
-                );
-                const archiveHash = crypto
-                    .createHmac('sha256', config.update.salt)
-                    .update(`${emoticonId}#${metadata.name}`)
-                    .digest()
-                    .toString('hex');
-                const archivePath = path.join(
-                    'storage',
-                    archiveHash.substring(0, 2),
-                    `${archiveHash}.zip`,
-                );
-                await fs.promises.mkdir(path.dirname(archivePath), {
-                    recursive: true,
-                });
-                try {
-                    await fs.promises.rename(metadata.archiveUrl, archivePath);
-                } catch (err) {
-                    if ((err as NodeJS.ErrnoException).code !== 'EXDEV')
-                        throw err;
-                    await fs.promises.copyFile(
-                        metadata.archiveUrl,
-                        archivePath,
-                    );
-                    await fs.promises.rm(metadata.archiveUrl);
-                }
-                metadata.archiveUrl = `${archivePath.replaceAll(path.sep, '/')}`;
-                db.delete(emoticonImage)
+        emoticonIdSources.map(([emoticonId, source]) =>
+            fetchEmoticonLimit(async () => {
+                const metadataCheckFetched = db
+                    .select({ archiveUrl: emoticon.archiveUrl })
+                    .from(emoticon)
                     .where(
-                        inArray(
-                            emoticonImage.emoticonImageId,
-                            images.map(e => e.emoticonImageId),
+                        and(
+                            eq(emoticon.emoticonId, emoticonId),
+                            eq(emoticon.source, source),
                         ),
                     )
-                    .run();
-                db.delete(emoticon)
-                    .where(eq(emoticon.emoticonId, emoticonId))
-                    .run();
-                db.insert(emoticon).values(metadata).run();
-                db.insert(emoticonImage).values(images).run();
-                updateLogger.info(
-                    'Updated emoticon %d (%s)',
-                    emoticonId,
-                    source,
-                );
-                return fetchEmoticonResultsAppend({
-                    emoticonId,
-                    source,
-                    result: 'fetched',
-                });
-            } catch (e) {
-                if ((e as WretchError)?.status === 404) {
-                    return fetchEmoticonResultsAppend({
+                    .get();
+                if (
+                    metadataCheckFetched &&
+                    !force &&
+                    (metadataCheckFetched.archiveUrl.match(/^https?:\/\//) ||
+                        (await fs.promises
+                            .access(metadataCheckFetched.archiveUrl)
+                            .then(
+                                () => true,
+                                () => false,
+                            )))
+                ) {
+                    updateLogger.info(
+                        'Already archived emoticon %d (%s)',
                         emoticonId,
                         source,
-                        result: 'notfound',
-                    });
-                } else {
-                    updateLogger.error(
-                        'Error on updating emoticon %d (%s): %s',
-                        emoticonId,
-                        source,
-                        e,
                     );
                     return fetchEmoticonResultsAppend({
                         emoticonId,
                         source,
-                        result: 'failed',
+                        result: 'unchanged',
                     });
                 }
-            }
-        }),
+                try {
+                    const [metadata, images] = await archiveEmoticon(
+                        emoticonId,
+                        source,
+                    );
+                    const archiveHash = crypto
+                        .createHmac('sha256', config.update.salt)
+                        .update(`${emoticonId}#${metadata.name}`)
+                        .digest()
+                        .toString('hex');
+                    const archivePath = path.join(
+                        'storage',
+                        archiveHash.substring(0, 2),
+                        `${archiveHash}.zip`,
+                    );
+                    await fs.promises.mkdir(path.dirname(archivePath), {
+                        recursive: true,
+                    });
+                    try {
+                        await fs.promises.rename(
+                            metadata.archiveUrl,
+                            archivePath,
+                        );
+                    } catch (err) {
+                        if ((err as NodeJS.ErrnoException).code !== 'EXDEV')
+                            throw err;
+                        await fs.promises.copyFile(
+                            metadata.archiveUrl,
+                            archivePath,
+                        );
+                        await fs.promises.rm(metadata.archiveUrl);
+                    }
+                    metadata.archiveUrl = `${archivePath.replaceAll(path.sep, '/')}`;
+                    db.delete(emoticonImage)
+                        .where(
+                            inArray(
+                                emoticonImage.emoticonImageId,
+                                images.map(e => e.emoticonImageId),
+                            ),
+                        )
+                        .run();
+                    db.delete(emoticon)
+                        .where(eq(emoticon.emoticonId, emoticonId))
+                        .run();
+                    db.insert(emoticon).values(metadata).run();
+                    db.insert(emoticonImage).values(images).run();
+                    updateLogger.info(
+                        'Updated emoticon %d (%s)',
+                        emoticonId,
+                        source,
+                    );
+                    return fetchEmoticonResultsAppend({
+                        emoticonId,
+                        source,
+                        result: 'fetched',
+                    });
+                } catch (e) {
+                    if ((e as WretchError)?.status === 404) {
+                        return fetchEmoticonResultsAppend({
+                            emoticonId,
+                            source,
+                            result: 'notfound',
+                        });
+                    } else {
+                        updateLogger.error(
+                            'Error on updating emoticon %d (%s): %s',
+                            emoticonId,
+                            source,
+                            e,
+                        );
+                        return fetchEmoticonResultsAppend({
+                            emoticonId,
+                            source,
+                            result: 'failed',
+                        });
+                    }
+                }
+            }),
+        ),
     );
 
 /**
