@@ -39,18 +39,54 @@
                                 :href="archiveUrl"
                                 :download="`${route.params.emoticonId} - ${name}`"
                             ><template #icon><n-mdi :icon="mdiDownload"></n-mdi></template>下载</n-button>
-                             <n-dropdown
-                                v-if="downloadAlternativeOptions.length"
-                                trigger="click"
-                                :options="downloadAlternativeOptions"
-                                @select="downloadAlternative"
-                            >
-                                <n-button
-                                    type="primary"
-                                    secondary
-                                    style="width:0"
-                                ><template #icon><n-mdi :icon="mdiTriangleSmallDown"></n-mdi></template></n-button>
-                             </n-dropdown>
+                             <n-popover trigger="click" placement="bottom">
+                                <template #trigger>
+                                    <n-button
+                                        type="primary"
+                                        secondary
+                                        style="width:0"
+                                    ><template #icon><n-mdi :icon="mdiTriangleSmallDown"></n-mdi></template></n-button>
+                                </template>
+                                <n-grid :x-gap="12" :y-gap="8" :cols="2" style="align-items:center;grid-template-columns:auto 120px">
+                                    <n-grid-item style="text-align:right">静态 PNG 图片</n-grid-item>
+                                    <n-grid-item>
+                                        <n-select
+                                            v-model:value="convertPNGMode"
+                                            :options="[
+                                                { label: '不转换', value: 'source' },
+                                                { label: 'GIF', value: 'gif' },
+                                                { label: '无损 WebP', value: 'webp-lossless' },
+                                                { label: '有损 WebP', value: 'webp-lossy' },
+                                            ]"
+                                        ></n-select>
+                                    </n-grid-item>
+                                    <n-grid-item style="text-align:right">动态 GIF 图片</n-grid-item>
+                                    <n-grid-item>
+                                        <n-select
+                                            v-model:value="convertGIFMode"
+                                            :options="[
+                                                { label: '不转换', value: 'source' },
+                                                { label: '有损 WebP', value: 'webp-lossy' },
+                                            ]"
+                                        ></n-select>
+                                    </n-grid-item>
+                                    <n-grid-item span="2">
+                                        <n-button
+                                            type="primary"
+                                            secondary
+                                            block
+                                            @click="convertDownload(convertPNGMode, convertGIFMode)"
+                                            :loading="convertLoading"
+                                        >
+                                            <template #icon><n-mdi :icon="mdiDownload"></n-mdi></template>
+                                            <template v-if="convertLoading">
+                                                转换中……&nbsp;<span v-if="convertProgressTotal">({{ convertProgressCurrent }}/{{ convertProgressTotal }})</span>
+                                            </template>
+                                            <template v-else>下载并转换</template>
+                                        </n-button>
+                                    </n-grid-item>
+                                </n-grid>
+                             </n-popover>
                         </n-button-group>
                         <n-button
                             v-if="source === 'qq'"
@@ -100,15 +136,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-    mdiDownload,
-    mdiFileGifBox,
-    mdiImage,
-    mdiTriangleSmallDown,
-} from '@mdi/js';
+import { mdiDownload, mdiTriangleSmallDown } from '@mdi/js';
 import type { Unzipped } from 'fflate';
-import type { DropdownOption } from 'naive-ui';
-import { computed, h, onMounted, ref, shallowRef, watch } from 'vue';
+import { onMounted, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import wretch from 'wretch';
 import NMdi from '../components/mdi.vue';
@@ -177,35 +207,15 @@ const update = async () => {
 onMounted(update);
 watch(() => route.params.emoticonId, update);
 
-const downloadAlternativeOptions = computed<DropdownOption[]>(() =>
-    animated.value
-        ? [
-              {
-                  label: '转换为动画 WebP',
-                  key: 'webp-animated',
-                  icon: () => h(NMdi, { icon: mdiImage }),
-              },
-          ]
-        : [
-              {
-                  label: '转换为 GIF',
-                  key: 'gif',
-                  icon: () => h(NMdi, { icon: mdiFileGifBox }),
-              },
-              {
-                  label: '转换为有损 WebP',
-                  key: 'webp-lossy',
-                  icon: () => h(NMdi, { icon: mdiImage }),
-              },
-              {
-                  label: '转换为无损 WebP',
-                  key: 'webp-lossless',
-                  icon: () => h(NMdi, { icon: mdiImage }),
-              },
-          ],
-);
+type ConvertMode = 'source' | 'gif' | 'webp-lossless' | 'webp-lossy';
 
-const downloadAlternativeModulesCached: {
+const convertPNGMode = ref<ConvertMode>('source');
+const convertGIFMode = ref<ConvertMode>('source');
+const convertLoading = ref(false);
+const convertProgressCurrent = ref(0);
+const convertProgressTotal = ref(0);
+
+const convertModulesCached: {
     gifWorkerScript?: string;
     // biome-ignore lint/suspicious/noExplicitAny: explanation
     img2webpInstance?: any;
@@ -213,8 +223,8 @@ const downloadAlternativeModulesCached: {
     gif2webpInstance?: any;
 } = {};
 
-const downloadAlternative = async (format: string) => {
-    if (format.includes('webp')) {
+const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
+    if (pngMode.includes('webp') || gifMode.includes('webp')) {
         if (
             !(await window.chiya.dialog.confirm({
                 title: '提示',
@@ -225,30 +235,38 @@ const downloadAlternative = async (format: string) => {
             return;
     }
 
-    const { unzip, zip } = await import('fflate');
-    const archive = await fetch(archiveUrl.value)
-        .then(r => r.arrayBuffer())
-        .then(r => new Uint8Array(r));
-    const unzipped = await new Promise<Unzipped>((resolve, reject) =>
-        unzip(archive, (err, data) => (err ? reject(err) : resolve(data))),
-    );
-    switch (format) {
-        case 'gif': {
-            const [GIF, GIFWorker] = await Promise.all([
-                import('gif.js').then(e => e.default),
-                import('gif.js/dist/gif.worker.js?raw').then(e => e.default),
-            ]);
-            if (!downloadAlternativeModulesCached.gifWorkerScript) {
-                downloadAlternativeModulesCached.gifWorkerScript =
-                    URL.createObjectURL(new Blob([GIFWorker]));
-            }
-            const { gifWorkerScript } = downloadAlternativeModulesCached;
-            await Promise.all(
-                Object.entries(unzipped)
-                    .filter(([path, _]) =>
-                        path.match(/\/emoticon\/.*?\.png$/gi),
-                    )
-                    .map(async ([path, data]) => {
+    try {
+        convertLoading.value = true;
+
+        const { unzip, zip } = await import('fflate');
+        const archive = await fetch(archiveUrl.value)
+            .then(r => r.arrayBuffer())
+            .then(r => new Uint8Array(r));
+        const unzipped = await new Promise<Unzipped>((resolve, reject) =>
+            unzip(archive, (err, data) => (err ? reject(err) : resolve(data))),
+        );
+        const unzippedEntries = Object.entries(unzipped);
+
+        convertProgressCurrent.value = 0;
+        convertProgressTotal.value = unzippedEntries.length;
+        const converted: Unzipped = {};
+        for (const [path, data] of unzippedEntries) {
+            convertProgressCurrent.value++;
+            if (path.match(/\/emoticon\/.*?\.png$/gi)) {
+                switch (pngMode) {
+                    case 'gif': {
+                        const [GIF, GIFWorker] = await Promise.all([
+                            import('gif.js').then(e => e.default),
+                            import('gif.js/dist/gif.worker.js?raw').then(
+                                e => e.default,
+                            ),
+                        ]);
+                        if (!convertModulesCached.gifWorkerScript) {
+                            convertModulesCached.gifWorkerScript =
+                                URL.createObjectURL(new Blob([GIFWorker]));
+                        }
+                        const { gifWorkerScript } = convertModulesCached;
+
                         const image = await new Promise<HTMLImageElement>(
                             (resolve, reject) => {
                                 const image = new Image();
@@ -262,7 +280,7 @@ const downloadAlternative = async (format: string) => {
                                 );
                             },
                         );
-                        unzipped[path.replace(/\.png$/g, '.gif')] =
+                        converted[path.replace(/\.png$/g, '.gif')] =
                             await new Promise<Uint8Array>(resolve => {
                                 const gif = new GIF({
                                     workerScript: gifWorkerScript,
@@ -278,41 +296,33 @@ const downloadAlternative = async (format: string) => {
                                 gif.addFrame(image);
                                 gif.render();
                             });
-                        delete unzipped[path];
-                    }),
-            );
-            break;
-        }
-        case 'webp-lossy':
-        case 'webp-lossless': {
-            const {
-                initFS,
-                Img2Webp,
-                runImg2Webp,
-                initLocateFile,
-                getFileWithBlobData,
-                writeFileWithUint8ArrayData,
-            } =
-                // @ts-expect-error
-                await import('@libwebp-wasm/img2webp');
-            if (!downloadAlternativeModulesCached.img2webpInstance) {
-                const img2webp = await import(
-                    '@libwebp-wasm/img2webp/lib/img2webp.wasm?url'
-                ).then(e => e.default);
-                downloadAlternativeModulesCached.img2webpInstance =
-                    await Img2Webp(initLocateFile(img2webp));
-                initFS(
-                    downloadAlternativeModulesCached.img2webpInstance,
-                    '/img2webp',
-                );
-            }
-            const { img2webpInstance } = downloadAlternativeModulesCached;
-            await Promise.all(
-                Object.entries(unzipped)
-                    .filter(([path, _]) =>
-                        path.match(/\/emoticon\/.*?\.png$/gi),
-                    )
-                    .map(async ([path, data]) => {
+                        break;
+                    }
+                    case 'webp-lossless':
+                    case 'webp-lossy': {
+                        const {
+                            initFS,
+                            Img2Webp,
+                            runImg2Webp,
+                            initLocateFile,
+                            getFileWithBlobData,
+                            writeFileWithUint8ArrayData,
+                        } =
+                            // @ts-expect-error
+                            await import('@libwebp-wasm/img2webp');
+                        if (!convertModulesCached.img2webpInstance) {
+                            const img2webp = await import(
+                                '@libwebp-wasm/img2webp/lib/img2webp.wasm?url'
+                            ).then(e => e.default);
+                            convertModulesCached.img2webpInstance =
+                                await Img2Webp(initLocateFile(img2webp));
+                            initFS(
+                                convertModulesCached.img2webpInstance,
+                                '/img2webp',
+                            );
+                        }
+                        const { img2webpInstance } = convertModulesCached;
+
                         // biome-ignore lint/style/noNonNullAssertion: explanation
                         const filename = path.split('/').pop()!;
                         const output = filename.replace(/\.png$/g, '.webp');
@@ -330,13 +340,13 @@ const downloadAlternative = async (format: string) => {
                             '4',
                             ...{
                                 'webp-lossless': ['-lossless'],
-                                'webp-lossy': ['-lossy', '-q', '75'],
-                            }[format],
+                                'webp-lossy': ['-lossy', '-q', '80'],
+                            }[pngMode],
                             filename,
                             '-o',
                             output,
                         );
-                        unzipped[path.replace(/\.png$/g, '.webp')] = await (
+                        converted[path.replace(/\.png$/g, '.webp')] = await (
                             getFileWithBlobData(
                                 img2webpInstance,
                                 output,
@@ -344,40 +354,37 @@ const downloadAlternative = async (format: string) => {
                         )
                             .arrayBuffer()
                             .then(r => new Uint8Array(r));
-                        delete unzipped[path];
-                    }),
-            );
-            break;
-        }
-        case 'webp-animated': {
-            const {
-                initFS,
-                Gif2Webp,
-                runGif2Webp,
-                initLocateFile,
-                getFileWithBlobData,
-                writeFileWithUint8ArrayData,
-            } =
-                // @ts-expect-error
-                await import('@libwebp-wasm/gif2webp');
-            if (!downloadAlternativeModulesCached.img2webpInstance) {
-                const gif2webp = await import(
-                    '@libwebp-wasm/gif2webp/lib/gif2webp.wasm?url'
-                ).then(e => e.default);
-                downloadAlternativeModulesCached.gif2webpInstance =
-                    await Gif2Webp(initLocateFile(gif2webp));
-                initFS(
-                    downloadAlternativeModulesCached.gif2webpInstance,
-                    '/gif2webp',
-                );
-            }
-            const { gif2webpInstance } = downloadAlternativeModulesCached;
-            await Promise.all(
-                Object.entries(unzipped)
-                    .filter(([path, _]) =>
-                        path.match(/\/emoticon\/.*?\.gif$/gi),
-                    )
-                    .map(async ([path, data]) => {
+                        break;
+                    }
+                    default:
+                        converted[path] = data;
+                }
+            } else if (path.match(/\/emoticon\/.*?\.gif$/gi)) {
+                switch (gifMode) {
+                    case 'webp-lossy': {
+                        const {
+                            initFS,
+                            Gif2Webp,
+                            runGif2Webp,
+                            initLocateFile,
+                            getFileWithBlobData,
+                            writeFileWithUint8ArrayData,
+                        } =
+                            // @ts-expect-error
+                            await import('@libwebp-wasm/gif2webp');
+                        if (!convertModulesCached.gif2webpInstance) {
+                            const gif2webp = await import(
+                                '@libwebp-wasm/gif2webp/lib/gif2webp.wasm?url'
+                            ).then(e => e.default);
+                            convertModulesCached.gif2webpInstance =
+                                await Gif2Webp(initLocateFile(gif2webp));
+                            initFS(
+                                convertModulesCached.gif2webpInstance,
+                                '/gif2webp',
+                            );
+                        }
+                        const { gif2webpInstance } = convertModulesCached;
+
                         // biome-ignore lint/style/noNonNullAssertion: explanation
                         const filename = path.split('/').pop()!;
                         const output = filename.replace(/\.gif$/g, '.webp');
@@ -396,12 +403,12 @@ const downloadAlternative = async (format: string) => {
                             '-m',
                             '4',
                             '-q',
-                            '75',
+                            '80',
                             filename,
                             '-o',
                             output,
                         );
-                        unzipped[path.replace(/\.gif$/g, '.webp')] = await (
+                        converted[path.replace(/\.gif$/g, '.webp')] = await (
                             getFileWithBlobData(
                                 gif2webpInstance,
                                 output,
@@ -409,27 +416,41 @@ const downloadAlternative = async (format: string) => {
                         )
                             .arrayBuffer()
                             .then(r => new Uint8Array(r));
-                        delete unzipped[path];
-                    }),
-            );
-            break;
+                        break;
+                    }
+                    default:
+                        converted[path] = data;
+                }
+            } else {
+                converted[path] = data;
+            }
         }
+
+        const repacked = await new Promise<Blob>((resolve, reject) =>
+            zip(converted, { level: 9 }, (err, data) =>
+                err
+                    ? reject(err)
+                    : resolve(
+                          new Blob([data.buffer as ArrayBuffer], {
+                              type: 'application/zip',
+                          }),
+                      ),
+            ),
+        );
+        const el = document.createElement('a');
+        el.href = URL.createObjectURL(repacked);
+        el.download = `${route.params.emoticonId} - ${name.value}`;
+        el.click();
+        URL.revokeObjectURL(el.href);
+    } catch (err) {
+        console.error(err);
+        window.chiya.dialog.error({
+            title: '转换失败',
+            content: (err as Error).toString(),
+        });
+    } finally {
+        convertProgressTotal.value = 0;
+        convertLoading.value = false;
     }
-    const repacked = await new Promise<Blob>((resolve, reject) =>
-        zip(unzipped, { level: 9 }, (err, data) =>
-            err
-                ? reject(err)
-                : resolve(
-                      new Blob([data.buffer as ArrayBuffer], {
-                          type: 'application/zip',
-                      }),
-                  ),
-        ),
-    );
-    const el = document.createElement('a');
-    el.href = URL.createObjectURL(repacked);
-    el.download = `${route.params.emoticonId} - ${name.value}`;
-    el.click();
-    URL.revokeObjectURL(el.href);
 };
 </script>
