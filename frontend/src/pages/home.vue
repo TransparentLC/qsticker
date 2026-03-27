@@ -278,7 +278,7 @@ const searchEmoticons = async (resetPage: boolean = false) => {
                 animated: boolean;
             }[];
         }>();
-    if (resetPage) pageEmoticonImages.value = 1;
+    if (resetPage) pageEmoticons.value = 1;
     emoticons.value = r.result.map(e => ({
         ...e,
         updateTime: new Date(e.updateTime),
