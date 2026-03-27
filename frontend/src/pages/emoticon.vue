@@ -216,7 +216,6 @@ const convertProgressCurrent = ref(0);
 const convertProgressTotal = ref(0);
 
 const convertModulesCached: {
-    gifWorkerScript?: string;
     // biome-ignore lint/suspicious/noExplicitAny: explanation
     img2webpInstance?: any;
     // biome-ignore lint/suspicious/noExplicitAny: explanation
@@ -255,17 +254,9 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
             if (path.match(/\/emoticon\/.*?\.png$/gi)) {
                 switch (pngMode) {
                     case 'gif': {
-                        const [GIF, GIFWorker] = await Promise.all([
-                            import('gif.js').then(e => e.default),
-                            import('gif.js/dist/gif.worker.js?raw').then(
-                                e => e.default,
-                            ),
-                        ]);
-                        if (!convertModulesCached.gifWorkerScript) {
-                            convertModulesCached.gifWorkerScript =
-                                URL.createObjectURL(new Blob([GIFWorker]));
-                        }
-                        const { gifWorkerScript } = convertModulesCached;
+                        const gifEncode = await import('modern-gif').then(
+                            e => e.encode,
+                        );
 
                         const image = await new Promise<HTMLImageElement>(
                             (resolve, reject) => {
@@ -281,21 +272,11 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
                             },
                         );
                         converted[path.replace(/\.png$/g, '.gif')] =
-                            await new Promise<Uint8Array>(resolve => {
-                                const gif = new GIF({
-                                    workerScript: gifWorkerScript,
-                                    quality: 1,
-                                    dither: 'FloydSteinberg',
-                                    transparent: 'rgba(0,0,0,0)',
-                                });
-                                gif.on('finished', blob =>
-                                    blob
-                                        .arrayBuffer()
-                                        .then(r => resolve(new Uint8Array(r))),
-                                );
-                                gif.addFrame(image);
-                                gif.render();
-                            });
+                            await gifEncode({
+                                width: image.width,
+                                height: image.height,
+                                frames: [{ data: image }],
+                            }).then(r => new Uint8Array(r));
                         break;
                     }
                     case 'webp-lossless':

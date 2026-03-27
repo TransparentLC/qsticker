@@ -1,0 +1,2 @@
+patchedDependencies:
+  modern-gif: patches/modern-gif.patch

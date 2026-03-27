@@ -1,0 +1,2 @@
+patchedDependencies:
+  "@types/adm-zip": patches/@types__adm-zip.patch
