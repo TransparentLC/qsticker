@@ -13,7 +13,7 @@
         "@libwebp-wasm/img2webp": "^1.0.0",
         "@mdi/js": "^7.4.47",
         "fflate": "^0.8.2",
-        "modern-gif": "^2.0.4",
+        "modern-palette": "^2.0.0",
         "naive-ui": "^2.44.1",
         "throttle-debounce": "^5.0.2",
         "vue": "^3.5.31",

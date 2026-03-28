@@ -20,7 +20,8 @@
             "**/*.jsonc",
             "**/*.vue",
             "!frontend/auto-imports.d.ts",
-            "!frontend/components.d.ts"
+            "!frontend/components.d.ts",
+            "!frontend/src/modern-gif/**/*"
         ]
     },
     "formatter": {

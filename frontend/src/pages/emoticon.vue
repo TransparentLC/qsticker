@@ -254,7 +254,7 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
             if (path.match(/\/emoticon\/.*?\.png$/gi)) {
                 switch (pngMode) {
                     case 'gif': {
-                        const gifEncode = await import('modern-gif').then(
+                        const gifEncode = await import('../modern-gif').then(
                             e => e.encode,
                         );
 
@@ -276,6 +276,8 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
                                 width: image.width,
                                 height: image.height,
                                 frames: [{ data: image }],
+                                dither: 'floyd-steinberg',
+                                ditherTransparency: 'stucki',
                             }).then(r => new Uint8Array(r));
                         break;
                     }
