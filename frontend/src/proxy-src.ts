@@ -1,7 +1,7 @@
 export default (url: string) => {
     let m: RegExpExecArray | null;
     m =
-        /^https:\/\/i0\.hdslb\.com\/bfs\/(garb|emote)\/([\da-f]{40}\.(?:jpg|png|gif|webp))$/.exec(
+        /^https:\/\/i0\.hdslb\.com\/bfs\/(garb(?:\/item)?|emote)\/([\da-f]{40}\.(?:jpg|png|gif|webp))$/.exec(
             url,
         );
     if (m) {

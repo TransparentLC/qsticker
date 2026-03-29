@@ -57,7 +57,7 @@ routeProxy(
 );
 routeProxy(
     app,
-    '/bfs/:type{garb|emote}/:filename{[\\da-f]{40}\\.(jpg|png|gif|webp)}',
+    '/bfs/:type{garb(/item)?|emote}/:filename{[\\da-f]{40}\\.(jpg|png|gif|webp)}',
     param => `https://i0.hdslb.com/bfs/${param('type')}/${param('filename')}`,
 );
 
