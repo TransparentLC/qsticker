@@ -5,7 +5,7 @@ import path from 'node:path';
 import stream from 'node:stream';
 import AdmZip from 'adm-zip';
 import { and, eq, inArray, max, sql } from 'drizzle-orm';
-import { execa } from 'execa';
+import { ExecaError, execa } from 'execa';
 import fg from 'fast-glob';
 import { type Frame, parseGIF } from 'gifuct-js';
 import cron from 'node-cron';
@@ -230,7 +230,7 @@ export const archiveEmoticon = async (
     }
 
     // 下载表情包
-    const archiveDir = path.join(os.tmpdir(), crypto.randomUUID());
+    const archiveDir = path.join(os.tmpdir(), 'qsticker', crypto.randomUUID());
     const archiveEmoticonDir = path.join(archiveDir, 'emoticon');
     await fs.promises.mkdir(archiveEmoticonDir, { recursive: true });
     await httpLimit(() =>
@@ -287,24 +287,34 @@ export const archiveEmoticon = async (
                     const sizeBefore = await fs.promises
                         .stat(e)
                         .then(r => r.size);
-                    await execa(
-                        'gifsicle',
-                        [
-                            ...(config.optimize.gif.verbose
-                                ? ['--verbose']
-                                : []),
-                            '--optimize=3',
-                            ...(config.optimize.gif.lossy
-                                ? [
-                                      `--lossy${typeof config.optimize.gif.lossy === 'number' ? `=${config.optimize.gif.lossy}` : ''}`,
-                                  ]
-                                : []),
-                            '--output',
+                    try {
+                        await execa(
+                            'gifsicle',
+                            [
+                                ...(config.optimize.gif.verbose
+                                    ? ['--verbose']
+                                    : []),
+                                '--optimize=3',
+                                ...(config.optimize.gif.lossy
+                                    ? [
+                                          `--lossy${typeof config.optimize.gif.lossy === 'number' ? `=${config.optimize.gif.lossy}` : ''}`,
+                                      ]
+                                    : []),
+                                '--output',
+                                e,
+                                e,
+                            ],
+                            { stdout: 'ignore', stderr: 'pipe' },
+                        );
+                    } catch (err) {
+                        return emoticonLogger.warn(
+                            'Archiving emoticon %d (%s) Optimized GIF %s failed: %s',
+                            emoticonId,
+                            source,
                             e,
-                            e,
-                        ],
-                        { stdout: 'inherit', stderr: 'inherit' },
-                    );
+                            err instanceof ExecaError ? err.stderr : err,
+                        );
+                    }
                     const sizeAfter = await fs.promises
                         .stat(e)
                         .then(r => r.size);
@@ -331,35 +341,45 @@ export const archiveEmoticon = async (
                     const sizeBefore = await fs.promises
                         .stat(e)
                         .then(r => r.size);
-                    await execa(
-                        'oxipng',
-                        [
-                            ...(config.optimize.png.verbose
-                                ? ['--verbose', '--verbose']
-                                : ['--quiet']),
-                            '--sequential',
-                            '--opt',
-                            'max',
-                            '--fast',
-                            '--strip',
-                            'safe',
-                            '--alpha',
-                            ...(config.optimize.png.zopfli
-                                ? [
-                                      '--zopfli',
-                                      ...(typeof config.optimize.png.zopfli ===
-                                      'number'
-                                          ? [
-                                                '--zi',
-                                                config.optimize.png.zopfli.toString(),
-                                            ]
-                                          : []),
-                                  ]
-                                : []),
+                    try {
+                        await execa(
+                            'oxipng',
+                            [
+                                ...(config.optimize.png.verbose
+                                    ? ['--verbose', '--verbose']
+                                    : []),
+                                '--sequential',
+                                '--opt',
+                                'max',
+                                '--fast',
+                                '--strip',
+                                'safe',
+                                '--alpha',
+                                ...(config.optimize.png.zopfli
+                                    ? [
+                                          '--zopfli',
+                                          ...(typeof config.optimize.png
+                                              .zopfli === 'number'
+                                              ? [
+                                                    '--zi',
+                                                    config.optimize.png.zopfli.toString(),
+                                                ]
+                                              : []),
+                                      ]
+                                    : []),
+                                e,
+                            ],
+                            { stdout: 'ignore', stderr: 'pipe' },
+                        );
+                    } catch (err) {
+                        return emoticonLogger.warn(
+                            'Archiving emoticon %d (%s) Optimized PNG %s failed: %s',
+                            emoticonId,
+                            source,
                             e,
-                        ],
-                        { stdout: 'inherit', stderr: 'inherit' },
-                    );
+                            err instanceof ExecaError ? err.stderr : err,
+                        );
+                    }
                     const sizeAfter = await fs.promises
                         .stat(e)
                         .then(r => r.size);
