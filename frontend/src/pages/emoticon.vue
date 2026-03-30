@@ -4,10 +4,12 @@
             <n-skeleton v-if="loading" :width="96" :height="96" :sharp="false"></n-skeleton>
             <n-image
                 v-else
-                :src="proxySrc(icon)"
+                :src="icon"
                 width="96"
                 height="96"
-                preview-disabled
+
+          preview-disabled
+                :img-props="{ referrerpolicy: 'no-referrer' }"
             ></n-image>
             <n-flex vertical>
                 <template v-if="loading">
@@ -118,9 +120,11 @@
                         <n-image
                             width="100%"
                             :show-toolbar="false"
-                            :preview-src="proxySrc(e.url)"
-                            :src="proxySrc(e.preview)"
+                            :preview-src="e.url"
+                            :src="e.preview"
                             :alt="e.keyword"
+                            :img-props="{ referrerpolicy: 'no-referrer' }"
+                            :previewed-img-props="{ referrerpolicy: 'no-referrer' }"
                         ></n-image>
                     </template>
                     {{ e.keyword }}
@@ -143,7 +147,6 @@ import { useRoute, useRouter } from 'vue-router';
 import wretch from 'wretch';
 import NMdi from '../components/mdi.vue';
 import formatSize from '../format-size';
-import proxySrc from '../proxy-src';
 
 const route = useRoute();
 const router = useRouter();

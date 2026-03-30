@@ -48,11 +48,12 @@
                         <n-list-item v-for="e in emoticons" @click="router.push(`/emoticon/${e.emoticonId}`)">
                             <template #prefix>
                                 <n-image
-                                    :src="proxySrc(e.icon)"
+                                    :src="e.icon"
                                     width="64"
                                     height="64"
                                     lazy
                                     preview-disabled
+                                    :img-props="{ referrerpolicy: 'no-referrer' }"
                                 ></n-image>
                             </template>
                             <template #suffix>
@@ -136,8 +137,8 @@
                                         <n-image
                                             width="100%"
                                             :show-toolbar="false"
-                                            :preview-src="proxySrc(e.url)"
-                                            :src="proxySrc(e.preview)"
+                                            :preview-src="e.url"
+                                            :src="e.preview"
                                             :alt="e.keyword"
                                         ></n-image>
                                         <div style="text-align:center;padding:.5em">
@@ -189,7 +190,6 @@ import wretch from 'wretch';
 import wretchQueryString from 'wretch/addons/queryString';
 import NMdi from '../components/mdi.vue';
 import formatSize from '../format-size';
-import proxySrc from '../proxy-src';
 import reactiveWindowSize from '../reactive-display';
 
 const router = useRouter();
