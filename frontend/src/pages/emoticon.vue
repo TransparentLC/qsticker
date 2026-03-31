@@ -7,8 +7,7 @@
                 :src="icon"
                 width="96"
                 height="96"
-
-          preview-disabled
+                preview-disabled
                 :img-props="{ referrerpolicy: 'no-referrer' }"
             ></n-image>
             <n-flex vertical>

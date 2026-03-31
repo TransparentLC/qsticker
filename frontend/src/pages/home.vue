@@ -140,6 +140,8 @@
                                             :preview-src="e.url"
                                             :src="e.preview"
                                             :alt="e.keyword"
+                                            :img-props="{ referrerpolicy: 'no-referrer' }"
+                                            :preview-img-props="{ referrerpolicy: 'no-referrer' }"
                                         ></n-image>
                                         <div style="text-align:center;padding:.5em">
                                             <n-text
