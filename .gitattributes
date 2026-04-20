@@ -1,4 +1,2 @@
 # Auto detect text files and perform LF normalization
 * text=auto eol=lf
-
-frontend/src/modern-gif/* linguist-vendored

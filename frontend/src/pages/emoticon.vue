@@ -256,7 +256,7 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
             if (path.match(/\/emoticon\/.*?\.png$/gi)) {
                 switch (pngMode) {
                     case 'gif': {
-                        const gifEncode = await import('../modern-gif').then(
+                        const gifEncode = await import('modern-gif').then(
                             e => e.encode,
                         );
 
