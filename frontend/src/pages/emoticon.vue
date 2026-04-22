@@ -48,13 +48,46 @@
                                         style="width:0"
                                     ><template #icon><n-mdi :icon="mdiTriangleSmallDown"></n-mdi></template></n-button>
                                 </template>
-                                <n-grid :x-gap="12" :y-gap="8" :cols="2" style="align-items:center;grid-template-columns:auto 120px">
+                                <n-grid :x-gap="12" :y-gap="8" :cols="2" style="align-items:center;grid-template-columns:auto 150px">
+                                    <n-grid-item span="2" style="font-size:large">
+                                        <strong>AI 放大</strong>
+                                    </n-grid-item>
+                                    <n-grid-item style="text-align:right">静态 PNG 图片</n-grid-item>
+                                    <n-grid-item>
+                                        <n-select
+                                            v-model:value="upscalePNGMode"
+                                            placeholder="不放大"
+                                            :options="[
+                                                { label: '不放大', value: null },
+                                                { label: 'Real-CUGAN 2x', value: 'realcugan,no-denoise,2' },
+                                                { label: 'Real-CUGAN 4x', value: 'realcugan,no-denoise,4' },
+                                                { label: 'Real-ESRGAN 4x', value: 'realesrgan,anime-plus,4' },
+                                            ]"
+                                        ></n-select>
+                                    </n-grid-item>
+                                    <n-grid-item style="text-align:right">动态 GIF 图片</n-grid-item>
+                                    <n-grid-item>
+                                        <n-select
+                                            v-model:value="upscaleGIFMode"
+                                            placeholder="不放大"
+                                            :options="[
+                                                { label: '不放大', value: null },
+                                                { label: 'Real-CUGAN 2x', value: 'realcugan,no-denoise,2' },
+                                                { label: 'Real-CUGAN 4x', value: 'realcugan,no-denoise,4' },
+                                                { label: 'Real-ESRGAN 4x', value: 'realesrgan,anime-plus,4' },
+                                            ]"
+                                        ></n-select>
+                                    </n-grid-item>
+                                    <n-grid-item span="2" style="font-size:large">
+                                        <strong>格式转换</strong>
+                                    </n-grid-item>
                                     <n-grid-item style="text-align:right">静态 PNG 图片</n-grid-item>
                                     <n-grid-item>
                                         <n-select
                                             v-model:value="convertPNGMode"
+                                            placeholder="不转换"
                                             :options="[
-                                                { label: '不转换', value: 'source' },
+                                                { label: '不转换', value: null },
                                                 { label: 'GIF', value: 'gif' },
                                                 { label: '无损 WebP', value: 'webp-lossless' },
                                                 { label: '有损 WebP', value: 'webp-lossy' },
@@ -65,8 +98,9 @@
                                     <n-grid-item>
                                         <n-select
                                             v-model:value="convertGIFMode"
+                                            placeholder="不转换"
                                             :options="[
-                                                { label: '不转换', value: 'source' },
+                                                { label: '不转换', value: null },
                                                 { label: '有损 WebP', value: 'webp-lossy' },
                                             ]"
                                         ></n-select>
@@ -76,7 +110,7 @@
                                             type="primary"
                                             secondary
                                             block
-                                            @click="convertDownload(convertPNGMode, convertGIFMode)"
+                                            @click="convertDownload(upscalePNGMode, upscaleGIFMode, convertPNGMode, convertGIFMode)"
                                             :loading="convertLoading"
                                         >
                                             <template #icon><n-mdi :icon="mdiDownload"></n-mdi></template>
@@ -138,9 +172,10 @@
     </n-flex>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { mdiDownload, mdiTriangleSmallDown } from '@mdi/js';
 import type { Unzipped } from 'fflate';
+import type { UnencodedFrame } from 'modern-gif';
 import { onMounted, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import wretch from 'wretch';
@@ -209,10 +244,13 @@ const update = async () => {
 onMounted(update);
 watch(() => route.params.emoticonId, update);
 
-type ConvertMode = 'source' | 'gif' | 'webp-lossless' | 'webp-lossy';
+type ConvertMode = 'gif' | 'webp-lossless' | 'webp-lossy' | null;
+type UpscaleMode = string | null;
 
-const convertPNGMode = ref<ConvertMode>('source');
-const convertGIFMode = ref<ConvertMode>('source');
+const convertPNGMode = ref<ConvertMode>(null);
+const convertGIFMode = ref<ConvertMode>(null);
+const upscalePNGMode = ref<UpscaleMode>(null);
+const upscaleGIFMode = ref<UpscaleMode>(null);
 const convertLoading = ref(false);
 const convertProgressCurrent = ref(0);
 const convertProgressTotal = ref(0);
@@ -224,8 +262,61 @@ const convertModulesCached: {
     gif2webpInstance?: any;
 } = {};
 
-const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
-    if (pngMode.includes('webp') || gifMode.includes('webp')) {
+const convertDownload = async (
+    pngUpscale: UpscaleMode,
+    gifUpscale: UpscaleMode,
+    pngMode: ConvertMode,
+    gifMode: ConvertMode,
+) => {
+    if (pngUpscale || gifUpscale) {
+        if (
+            !(await window.chiya.dialog.confirm({
+                title: '提示',
+                content: () => (
+                    <>
+                        <n-p>
+                            AI 放大功能需要加载 2-10 MB
+                            左右的模型，且耗时较长，不建议在移动端执行。根据 GPU
+                            性能和图片大小不同，在桌面端放大一张静态图片需要
+                            2-10s，
+                            <n-text strong>
+                                对于动图则需要逐帧放大，耗时极长
+                            </n-text>
+                            。
+                        </n-p>
+                        {navigator.gpu ? (
+                            ''
+                        ) : (
+                            <n-p>
+                                你的浏览器不支持或未启用
+                                WebGPU，耗时将会更长。可以在{' '}
+                                <n-a
+                                    href="https://caniuse.com/webgpu"
+                                    target="_blank"
+                                >
+                                    Can I use ...
+                                </n-a>{' '}
+                                上查看你的浏览器是否支持和如何启用。
+                            </n-p>
+                        )}
+                        <n-p>
+                            此功能仅作为前端技术展示，如果对速度有较高要求，建议在电脑上使用{' '}
+                            <n-a
+                                href="https://github.com/TransparentLC/realesrgan-gui"
+                                target="_blank"
+                            >
+                                Real-ESRGAN GUI
+                            </n-a>{' '}
+                            等软件进行 AI 放大。
+                        </n-p>
+                        <n-p>是否继续？</n-p>
+                    </>
+                ),
+            }))
+        )
+            return;
+    }
+    if (pngMode?.includes('webp') || gifMode?.includes('webp')) {
         if (
             !(await window.chiya.dialog.confirm({
                 title: '提示',
@@ -235,6 +326,19 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
         )
             return;
     }
+
+    const pngUpscaleConfig = pngUpscale
+        ? (() => {
+              const [type, model, factor] = pngUpscale.split(',');
+              return { type, model, factor: parseInt(factor, 10) };
+          })()
+        : null;
+    const gifUpscaleConfig = gifUpscale
+        ? (() => {
+              const [type, model, factor] = gifUpscale.split(',');
+              return { type, model, factor: parseInt(factor, 10) };
+          })()
+        : null;
 
     try {
         convertLoading.value = true;
@@ -254,6 +358,31 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
         for (const [path, data] of unzippedEntries) {
             convertProgressCurrent.value++;
             if (path.match(/\/emoticon\/.*?\.png$/gi)) {
+                const dataUpscaled = pngUpscaleConfig
+                    ? await (async () => {
+                          const upscale = await import(
+                              '../web-realesrgan'
+                          ).then(e => e.default);
+                          const image = await new Promise<HTMLImageElement>(
+                              (resolve, reject) => {
+                                  const img = new Image();
+                                  img.onload = () => resolve(img);
+                                  img.onerror = reject;
+                                  img.src = URL.createObjectURL(
+                                      new Blob([data.buffer as ArrayBuffer]),
+                                  );
+                              },
+                          );
+                          // @ts-expect-error
+                          return upscale(image, {
+                              ...pngUpscaleConfig,
+                              timeLabel: path,
+                          })
+                              .then(e => e.toBlob())
+                              .then(e => e.arrayBuffer())
+                              .then(e => new Uint8Array(e));
+                      })()
+                    : data;
                 switch (pngMode) {
                     case 'gif': {
                         const gifEncode = await import('modern-gif').then(
@@ -269,7 +398,9 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
                                 };
                                 image.onerror = reject;
                                 image.src = URL.createObjectURL(
-                                    new Blob([data.buffer as ArrayBuffer]),
+                                    new Blob([
+                                        dataUpscaled.buffer as ArrayBuffer,
+                                    ]),
                                 );
                             },
                         );
@@ -314,7 +445,7 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
                         writeFileWithUint8ArrayData(
                             img2webpInstance,
                             filename,
-                            data,
+                            dataUpscaled,
                         );
                         runImg2Webp(
                             img2webpInstance,
@@ -342,9 +473,82 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
                         break;
                     }
                     default:
-                        converted[path] = data;
+                        converted[path] = dataUpscaled;
                 }
             } else if (path.match(/\/emoticon\/.*?\.gif$/gi)) {
+                const dataUpscaled = gifUpscaleConfig
+                    ? await (async () => {
+                          const [upscale, [gifEncode, gifDecodeFrames]] =
+                              await Promise.all([
+                                  import('../web-realesrgan').then(
+                                      e => e.default,
+                                  ),
+                                  import('modern-gif').then(
+                                      e =>
+                                          [e.encode, e.decodeFrames] as [
+                                              typeof import('modern-gif').encode,
+                                              typeof import('modern-gif').decodeFrames,
+                                          ],
+                                  ),
+                              ]);
+                          const frames = gifDecodeFrames(
+                              data.buffer as ArrayBuffer,
+                          );
+                          const framesUpscaled = [] as UnencodedFrame[];
+                          for (const frame of frames) {
+                              const canvas = new OffscreenCanvas(
+                                  frame.width,
+                                  frame.height,
+                              );
+                              // biome-ignore lint/style/noNonNullAssertion: explanation
+                              const ctx = canvas.getContext('2d')!;
+                              ctx.putImageData(
+                                  new ImageData(
+                                      frame.data as Uint8ClampedArray<ArrayBuffer>,
+                                      frame.width,
+                                      frame.height,
+                                  ),
+                                  0,
+                                  0,
+                              );
+                              const blob = await canvas.convertToBlob();
+                              const image = await new Promise<HTMLImageElement>(
+                                  (resolve, reject) => {
+                                      const image = new Image();
+                                      image.onload = () => {
+                                          URL.revokeObjectURL(image.src);
+                                          resolve(image);
+                                      };
+                                      image.onerror = reject;
+                                      image.src = URL.createObjectURL(blob);
+                                  },
+                              );
+                              // @ts-expect-error
+                              const frameUpscaled = await upscale(image, {
+                                  ...gifUpscaleConfig,
+                                  timeLabel: path,
+                              });
+                              framesUpscaled.push({
+                                  data: await frameUpscaled.toImage(),
+                                  width: frameUpscaled.width,
+                                  height: frameUpscaled.height,
+                                  delay: frame.delay,
+                              });
+                          }
+
+                          return await gifEncode({
+                              width:
+                                  // biome-ignore lint/style/noNonNullAssertion: explanation
+                                  framesUpscaled[0]!.width!,
+                              height:
+                                  // biome-ignore lint/style/noNonNullAssertion: explanation
+                                  framesUpscaled[0]!.height!,
+                              frames: framesUpscaled,
+                              dither: 'floyd-steinberg',
+                              ditherTransparency: 'stucki',
+                          }).then(e => new Uint8Array(e));
+                      })()
+                    : data;
                 switch (gifMode) {
                     case 'webp-lossy': {
                         const {
@@ -376,7 +580,7 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
                         writeFileWithUint8ArrayData(
                             gif2webpInstance,
                             filename,
-                            data,
+                            dataUpscaled,
                         );
                         runGif2Webp(
                             gif2webpInstance,
@@ -404,7 +608,7 @@ const convertDownload = async (pngMode: ConvertMode, gifMode: ConvertMode) => {
                         break;
                     }
                     default:
-                        converted[path] = data;
+                        converted[path] = dataUpscaled;
                 }
             } else {
                 converted[path] = data;

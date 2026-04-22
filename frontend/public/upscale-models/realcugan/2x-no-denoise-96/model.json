@@ -1,0 +1,3732 @@
+{
+    "format": "graph-model",
+    "generatedBy": "2.15.0",
+    "convertedBy": "TensorFlow.js Converter v4.21.0",
+    "signature": {
+        "inputs": {
+            "input": {
+                "name": "input:0",
+                "dtype": "DT_FLOAT",
+                "tensorShape": {
+                    "dim": [
+                        { "size": "1" },
+                        { "size": "96" },
+                        { "size": "96" },
+                        { "size": "3" }
+                    ]
+                }
+            }
+        },
+        "outputs": {
+            "output": {
+                "name": "Identity:0",
+                "dtype": "DT_FLOAT",
+                "tensorShape": {
+                    "dim": [
+                        { "size": "1" },
+                        { "size": "192" },
+                        { "size": "192" },
+                        { "size": "3" }
+                    ]
+                }
+            }
+        }
+    },
+    "modelTopology": {
+        "node": [
+            {
+                "name": "unknown_58",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_59",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_3/ones_like",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_3/conv2d_transpose/input_sizes",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_57",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "2" },
+                                    { "size": "2" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_46",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_47",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_4/ones_like",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_2/conv2d_transpose/input_sizes",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_45",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "2" },
+                                    { "size": "2" },
+                                    { "size": "128" },
+                                    { "size": "128" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_21",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "32" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_22",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "32" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_23",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "32" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_24",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_25",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "2" },
+                                    { "size": "2" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_26",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_27",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_28",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_29",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "64" },
+                                    { "size": "128" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_30",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "128" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean_1/Mean/reduction_indices",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "2" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_31",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "128" },
+                                    { "size": "16" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_32",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "16" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_33",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "16" },
+                                    { "size": "128" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_34",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "128" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_35",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "2" },
+                                    { "size": "2" },
+                                    { "size": "128" },
+                                    { "size": "128" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_36",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "128" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_37",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "128" },
+                                    { "size": "256" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_38",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "256" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_39",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "256" },
+                                    { "size": "128" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_40",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "128" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean_2/Mean/reduction_indices",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "2" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_41",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "128" },
+                                    { "size": "16" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_42",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "16" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_43",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "16" },
+                                    { "size": "128" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_44",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "128" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_26/Add/y",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "128" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_49",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "128" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_50",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_51",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_52",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean_3/Mean/reduction_indices",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "2" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_53",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "64" },
+                                    { "size": "8" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_54",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "8" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_55",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "8" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_56",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_33/Add/y",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_61",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_62",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_65",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "64" },
+                                    { "size": "3" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_66",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "3" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_1/conv2d_transpose/input_sizes",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_20",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "4" },
+                                    { "size": "4" },
+                                    { "size": "3" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_15",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_16",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice/ones_like",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose/conv2d_transpose/input_sizes",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_14",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "2" },
+                                    { "size": "2" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": {
+                                "dim": [{ "size": "4" }, { "size": "2" }]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_0",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "32" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_1",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "32" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_2",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "32" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_3",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_4",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "2" },
+                                    { "size": "2" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_5",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_6",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "64" },
+                                    { "size": "128" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_7",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "128" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_8",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "128" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_9",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean/Mean/reduction_indices",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "2" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_10",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "64" },
+                                    { "size": "8" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_11",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "8" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_12",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "1" },
+                                    { "size": "1" },
+                                    { "size": "8" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_13",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_9/Add/y",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_18",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": {
+                                "dim": [
+                                    { "size": "3" },
+                                    { "size": "3" },
+                                    { "size": "64" },
+                                    { "size": "64" }
+                                ]
+                            }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "unknown_19",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "64" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_13/Add/y",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_FLOAT",
+                            "tensorShape": { "dim": [{ "size": "3" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice/begin",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice/end",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_1/ones_like",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_63",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "unknown_64",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_2/ones_like",
+                "op": "Const",
+                "attr": {
+                    "value": {
+                        "tensor": {
+                            "dtype": "DT_INT32",
+                            "tensorShape": { "dim": [{ "size": "4" }] }
+                        }
+                    },
+                    "dtype": { "type": "DT_INT32" }
+                }
+            },
+            {
+                "name": "input",
+                "op": "Placeholder",
+                "attr": {
+                    "shape": {
+                        "shape": {
+                            "dim": [
+                                { "size": "1" },
+                                { "size": "96" },
+                                { "size": "96" },
+                                { "size": "3" }
+                            ]
+                        }
+                    },
+                    "dtype": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.compat.v1.pad/wa/Pad",
+                "op": "MirrorPad",
+                "input": ["input", "unknown"],
+                "attr": {
+                    "Tpaddings": { "type": "DT_INT32" },
+                    "mode": { "s": "UkVGTEVDVA==" },
+                    "T": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.compat.v1.pad/wa/Pad",
+                    "unknown_0",
+                    "unknown_1"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "-9" },
+                                        { "size": "-10" },
+                                        { "size": "-8" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "32" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_1/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu/LeakyRelu",
+                    "unknown_2",
+                    "unknown_3"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "-11" },
+                                        { "size": "-12" },
+                                        { "size": "32" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "32" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice/StridedSlice",
+                "op": "StridedSlice",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_1/LeakyRelu",
+                    "unknown_15",
+                    "unknown_16",
+                    "PartitionedCall/model_2/tf.strided_slice/ones_like"
+                ],
+                "attr": {
+                    "shrink_axis_mask": { "i": "0" },
+                    "Index": { "type": "DT_INT32" },
+                    "new_axis_mask": { "i": "0" },
+                    "begin_mask": { "i": "9" },
+                    "T": { "type": "DT_FLOAT" },
+                    "end_mask": { "i": "9" },
+                    "ellipsis_mask": { "i": "0" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_2/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_1/LeakyRelu",
+                    "unknown_4",
+                    "unknown_5"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "-13" },
+                                        { "size": "-14" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "2" },
+                                        { "size": "2" },
+                                        { "size": "64" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "2", "2", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_3/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_2/LeakyRelu",
+                    "unknown_6",
+                    "unknown_7"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "-18" },
+                                        { "size": "-19" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "64" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_4/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_3/LeakyRelu",
+                    "unknown_8",
+                    "unknown_9"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "-20" },
+                                        { "size": "-21" },
+                                        { "size": "128" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "128" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean/Mean",
+                "op": "Mean",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_4/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.reduce_mean/Mean/reduction_indices"
+                ],
+                "attr": {
+                    "Tidx": { "type": "DT_INT32" },
+                    "T": { "type": "DT_FLOAT" },
+                    "keep_dims": { "b": true }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.relu/Relu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.reduce_mean/Mean",
+                    "unknown_10",
+                    "unknown_11"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "64" },
+                                        { "size": "8" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "UmVsdQ=="] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_8/Add",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.relu/Relu",
+                    "unknown_12",
+                    "unknown_13"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "8" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "8" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.sigmoid/Sigmoid",
+                "op": "Sigmoid",
+                "input": ["PartitionedCall/model_2/tf.math.add_8/Add"],
+                "attr": {
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "T": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.multiply_3/Mul",
+                "op": "Mul",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_4/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.sigmoid/Sigmoid"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose/conv2d_transpose",
+                "op": "Conv2DBackpropInput",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose/conv2d_transpose/input_sizes",
+                    "unknown_14",
+                    "PartitionedCall/model_2/tf.math.multiply_3/Mul"
+                ],
+                "attr": {
+                    "padding": { "s": "VkFMSUQ=" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "2", "2", "1"] } },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_9/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose/conv2d_transpose",
+                    "PartitionedCall/model_2/tf.math.add_9/Add/y"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_5/LeakyRelu",
+                "op": "LeakyRelu",
+                "input": ["PartitionedCall/model_2/tf.math.add_9/Add"],
+                "attr": { "alpha": { "f": 0.1 }, "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_11/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.strided_slice/StridedSlice",
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_5/LeakyRelu"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_6/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.add_11/Add",
+                    "unknown_18",
+                    "unknown_19"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "120" },
+                                        { "size": "120" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "64" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_1/conv2d_transpose",
+                "op": "Conv2DBackpropInput",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose_1/conv2d_transpose/input_sizes",
+                    "unknown_20",
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_6/LeakyRelu"
+                ],
+                "attr": {
+                    "padding": { "s": "VkFMSUQ=" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "strides": { "list": { "i": ["1", "2", "2", "1"] } },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_13/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose_1/conv2d_transpose",
+                    "PartitionedCall/model_2/tf.math.add_13/Add/y"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice",
+                "op": "StridedSlice",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.add_13/Add",
+                    "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice/begin",
+                    "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice/end",
+                    "PartitionedCall/model_2/tf.strided_slice_1/ones_like"
+                ],
+                "attr": {
+                    "shrink_axis_mask": { "i": "0" },
+                    "Index": { "type": "DT_INT32" },
+                    "new_axis_mask": { "i": "0" },
+                    "begin_mask": { "i": "9" },
+                    "end_mask": { "i": "9" },
+                    "T": { "type": "DT_FLOAT" },
+                    "ellipsis_mask": { "i": "0" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_7/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice",
+                    "unknown_21",
+                    "unknown_22"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "232" },
+                                        { "size": "232" },
+                                        { "size": "3" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "32" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_2/StridedSlice",
+                "op": "StridedSlice",
+                "input": [
+                    "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice",
+                    "unknown_63",
+                    "unknown_64",
+                    "PartitionedCall/model_2/tf.strided_slice_2/ones_like"
+                ],
+                "attr": {
+                    "shrink_axis_mask": { "i": "0" },
+                    "new_axis_mask": { "i": "0" },
+                    "Index": { "type": "DT_INT32" },
+                    "begin_mask": { "i": "9" },
+                    "T": { "type": "DT_FLOAT" },
+                    "end_mask": { "i": "9" },
+                    "ellipsis_mask": { "i": "0" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_8/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_7/LeakyRelu",
+                    "unknown_23",
+                    "unknown_24"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "230" },
+                                        { "size": "230" },
+                                        { "size": "32" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "32" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_3/StridedSlice",
+                "op": "StridedSlice",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_8/LeakyRelu",
+                    "unknown_58",
+                    "unknown_59",
+                    "PartitionedCall/model_2/tf.strided_slice_3/ones_like"
+                ],
+                "attr": {
+                    "shrink_axis_mask": { "i": "0" },
+                    "Index": { "type": "DT_INT32" },
+                    "new_axis_mask": { "i": "0" },
+                    "begin_mask": { "i": "9" },
+                    "T": { "type": "DT_FLOAT" },
+                    "end_mask": { "i": "9" },
+                    "ellipsis_mask": { "i": "0" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_9/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_8/LeakyRelu",
+                    "unknown_25",
+                    "unknown_26"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "228" },
+                                        { "size": "228" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "2" },
+                                        { "size": "2" },
+                                        { "size": "64" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "2", "2", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_10/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_9/LeakyRelu",
+                    "unknown_27",
+                    "unknown_28"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "114" },
+                                        { "size": "114" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "64" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_11/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_10/LeakyRelu",
+                    "unknown_29",
+                    "unknown_30"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "112" },
+                                        { "size": "112" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "64" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean_1/Mean",
+                "op": "Mean",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_11/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.reduce_mean_1/Mean/reduction_indices"
+                ],
+                "attr": {
+                    "T": { "type": "DT_FLOAT" },
+                    "Tidx": { "type": "DT_INT32" },
+                    "keep_dims": { "b": true }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.relu_1/Relu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.reduce_mean_1/Mean",
+                    "unknown_31",
+                    "unknown_32"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "128" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "128" },
+                                        { "size": "16" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "UmVsdQ=="] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_20/Add",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.relu_1/Relu",
+                    "unknown_33",
+                    "unknown_34"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "16" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "16" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.sigmoid_1/Sigmoid",
+                "op": "Sigmoid",
+                "input": ["PartitionedCall/model_2/tf.math.add_20/Add"],
+                "attr": {
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "T": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.multiply_9/Mul",
+                "op": "Mul",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_11/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.sigmoid_1/Sigmoid"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_12/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.multiply_9/Mul",
+                    "unknown_35",
+                    "unknown_36"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "110" },
+                                        { "size": "110" },
+                                        { "size": "128" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "2" },
+                                        { "size": "2" },
+                                        { "size": "128" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "2", "2", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.strided_slice_4/StridedSlice",
+                "op": "StridedSlice",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.multiply_9/Mul",
+                    "unknown_46",
+                    "unknown_47",
+                    "PartitionedCall/model_2/tf.strided_slice_4/ones_like"
+                ],
+                "attr": {
+                    "shrink_axis_mask": { "i": "0" },
+                    "Index": { "type": "DT_INT32" },
+                    "new_axis_mask": { "i": "0" },
+                    "begin_mask": { "i": "9" },
+                    "end_mask": { "i": "9" },
+                    "T": { "type": "DT_FLOAT" },
+                    "ellipsis_mask": { "i": "0" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_13/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_12/LeakyRelu",
+                    "unknown_37",
+                    "unknown_38"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "55" },
+                                        { "size": "55" },
+                                        { "size": "128" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "128" },
+                                        { "size": "256" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_14/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_13/LeakyRelu",
+                    "unknown_39",
+                    "unknown_40"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "53" },
+                                        { "size": "53" },
+                                        { "size": "256" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "256" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean_2/Mean",
+                "op": "Mean",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_14/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.reduce_mean_2/Mean/reduction_indices"
+                ],
+                "attr": {
+                    "Tidx": { "type": "DT_INT32" },
+                    "T": { "type": "DT_FLOAT" },
+                    "keep_dims": { "b": true }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.relu_2/Relu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.reduce_mean_2/Mean",
+                    "unknown_41",
+                    "unknown_42"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "128" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "128" },
+                                        { "size": "16" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "UmVsdQ=="] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_25/Add",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.relu_2/Relu",
+                    "unknown_43",
+                    "unknown_44"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "16" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "16" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.sigmoid_2/Sigmoid",
+                "op": "Sigmoid",
+                "input": ["PartitionedCall/model_2/tf.math.add_25/Add"],
+                "attr": {
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "128" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "T": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.multiply_13/Mul",
+                "op": "Mul",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_14/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.sigmoid_2/Sigmoid"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_2/conv2d_transpose",
+                "op": "Conv2DBackpropInput",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose_2/conv2d_transpose/input_sizes",
+                    "unknown_45",
+                    "PartitionedCall/model_2/tf.math.multiply_13/Mul"
+                ],
+                "attr": {
+                    "padding": { "s": "VkFMSUQ=" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "2", "2", "1"] } },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_26/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose_2/conv2d_transpose",
+                    "PartitionedCall/model_2/tf.math.add_26/Add/y"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_15/LeakyRelu",
+                "op": "LeakyRelu",
+                "input": ["PartitionedCall/model_2/tf.math.add_26/Add"],
+                "attr": { "alpha": { "f": 0.1 }, "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_28/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.strided_slice_4/StridedSlice",
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_15/LeakyRelu"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_16/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.add_28/Add",
+                    "unknown_49",
+                    "unknown_50"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "102" },
+                                        { "size": "102" },
+                                        { "size": "128" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "128" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_17/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_16/LeakyRelu",
+                    "unknown_51",
+                    "unknown_52"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "100" },
+                                        { "size": "100" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "64" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "num_args": { "i": "1" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.reduce_mean_3/Mean",
+                "op": "Mean",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_17/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.reduce_mean_3/Mean/reduction_indices"
+                ],
+                "attr": {
+                    "T": { "type": "DT_FLOAT" },
+                    "Tidx": { "type": "DT_INT32" },
+                    "keep_dims": { "b": true }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.relu_3/Relu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.reduce_mean_3/Mean",
+                    "unknown_53",
+                    "unknown_54"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "64" },
+                                        { "size": "8" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "UmVsdQ=="] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_32/Add",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.relu_3/Relu",
+                    "unknown_55",
+                    "unknown_56"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "8" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "8" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "U0FNRQ==" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.sigmoid_3/Sigmoid",
+                "op": "Sigmoid",
+                "input": ["PartitionedCall/model_2/tf.math.add_32/Add"],
+                "attr": {
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "1" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "T": { "type": "DT_FLOAT" }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.multiply_19/Mul",
+                "op": "Mul",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_17/LeakyRelu",
+                    "PartitionedCall/model_2/tf.math.sigmoid_3/Sigmoid"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_3/conv2d_transpose",
+                "op": "Conv2DBackpropInput",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose_3/conv2d_transpose/input_sizes",
+                    "unknown_57",
+                    "PartitionedCall/model_2/tf.math.multiply_19/Mul"
+                ],
+                "attr": {
+                    "padding": { "s": "VkFMSUQ=" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "2", "2", "1"] } },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_33/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.conv2d_transpose_3/conv2d_transpose",
+                    "PartitionedCall/model_2/tf.math.add_33/Add/y"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_18/LeakyRelu",
+                "op": "LeakyRelu",
+                "input": ["PartitionedCall/model_2/tf.math.add_33/Add"],
+                "attr": { "alpha": { "f": 0.1 }, "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_35/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.strided_slice_3/StridedSlice",
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_18/LeakyRelu"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.nn.leaky_relu_19/LeakyRelu",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.add_35/Add",
+                    "unknown_61",
+                    "unknown_62"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "-26" },
+                                        { "size": "196" },
+                                        { "size": "196" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "64" },
+                                        { "size": "64" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": {
+                        "list": { "s": ["Qmlhc0FkZA==", "TGVha3lSZWx1"] }
+                    },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.1 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/tf.math.add_37/Add",
+                "op": "_FusedConv2D",
+                "input": [
+                    "PartitionedCall/model_2/tf.nn.leaky_relu_19/LeakyRelu",
+                    "unknown_65",
+                    "unknown_66"
+                ],
+                "device": "/device:CPU:0",
+                "attr": {
+                    "num_host_args": { "i": "0" },
+                    "_input_shapes": {
+                        "list": {
+                            "shape": [
+                                {
+                                    "dim": [
+                                        { "size": "-26" },
+                                        { "size": "194" },
+                                        { "size": "194" },
+                                        { "size": "64" }
+                                    ]
+                                },
+                                {
+                                    "dim": [
+                                        { "size": "3" },
+                                        { "size": "3" },
+                                        { "size": "64" },
+                                        { "size": "3" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "filter_format": { "s": "SFdJTw==" },
+                    "data_format": { "s": "TkhXQw==" },
+                    "strides": { "list": { "i": ["1", "1", "1", "1"] } },
+                    "num_args": { "i": "1" },
+                    "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } },
+                    "TArgs": { "list": { "type": ["DT_FLOAT"] } },
+                    "padding": { "s": "VkFMSUQ=" },
+                    "use_cudnn_on_gpu": { "b": true },
+                    "leakyrelu_alpha": { "f": 0.2 },
+                    "epsilon": { "f": 0.0 },
+                    "T": { "type": "DT_FLOAT" },
+                    "explicit_paddings": { "list": {} },
+                    "dilations": { "list": { "i": ["1", "1", "1", "1"] } }
+                }
+            },
+            {
+                "name": "PartitionedCall/model_2/output/Add",
+                "op": "AddV2",
+                "input": [
+                    "PartitionedCall/model_2/tf.math.add_37/Add",
+                    "PartitionedCall/model_2/tf.strided_slice_2/StridedSlice"
+                ],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            },
+            {
+                "name": "Identity",
+                "op": "Identity",
+                "input": ["PartitionedCall/model_2/output/Add"],
+                "attr": { "T": { "type": "DT_FLOAT" } }
+            }
+        ],
+        "library": {},
+        "versions": { "producer": 1882 }
+    },
+    "weightsManifest": [
+        {
+            "paths": ["group1-shard1of1.bin"],
+            "weights": [
+                { "name": "unknown_58", "shape": [4], "dtype": "int32" },
+                { "name": "unknown_59", "shape": [4], "dtype": "int32" },
+                {
+                    "name": "PartitionedCall/model_2/tf.strided_slice_3/ones_like",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_3/conv2d_transpose/input_sizes",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_57",
+                    "shape": [2, 2, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                { "name": "unknown_46", "shape": [4], "dtype": "int32" },
+                { "name": "unknown_47", "shape": [4], "dtype": "int32" },
+                {
+                    "name": "PartitionedCall/model_2/tf.strided_slice_4/ones_like",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_2/conv2d_transpose/input_sizes",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_45",
+                    "shape": [2, 2, 128, 128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_21",
+                    "shape": [3, 3, 3, 32],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_22",
+                    "shape": [32],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_23",
+                    "shape": [3, 3, 32, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_24",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_25",
+                    "shape": [2, 2, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_26",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_27",
+                    "shape": [3, 3, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_28",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_29",
+                    "shape": [3, 3, 64, 128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_30",
+                    "shape": [128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.reduce_mean_1/Mean/reduction_indices",
+                    "shape": [2],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_31",
+                    "shape": [1, 1, 128, 16],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_32",
+                    "shape": [16],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_33",
+                    "shape": [1, 1, 16, 128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_34",
+                    "shape": [128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_35",
+                    "shape": [2, 2, 128, 128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_36",
+                    "shape": [128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_37",
+                    "shape": [3, 3, 128, 256],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_38",
+                    "shape": [256],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_39",
+                    "shape": [3, 3, 256, 128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_40",
+                    "shape": [128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.reduce_mean_2/Mean/reduction_indices",
+                    "shape": [2],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_41",
+                    "shape": [1, 1, 128, 16],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_42",
+                    "shape": [16],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_43",
+                    "shape": [1, 1, 16, 128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_44",
+                    "shape": [128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.add_26/Add/y",
+                    "shape": [128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_49",
+                    "shape": [3, 3, 128, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_50",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_51",
+                    "shape": [3, 3, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_52",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.reduce_mean_3/Mean/reduction_indices",
+                    "shape": [2],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_53",
+                    "shape": [1, 1, 64, 8],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_54",
+                    "shape": [8],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_55",
+                    "shape": [1, 1, 8, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_56",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.add_33/Add/y",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_61",
+                    "shape": [3, 3, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_62",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_65",
+                    "shape": [3, 3, 64, 3],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_66",
+                    "shape": [3],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose_1/conv2d_transpose/input_sizes",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_20",
+                    "shape": [4, 4, 3, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                { "name": "unknown_15", "shape": [4], "dtype": "int32" },
+                { "name": "unknown_16", "shape": [4], "dtype": "int32" },
+                {
+                    "name": "PartitionedCall/model_2/tf.strided_slice/ones_like",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.nn.conv2d_transpose/conv2d_transpose/input_sizes",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_14",
+                    "shape": [2, 2, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                { "name": "unknown", "shape": [4, 2], "dtype": "int32" },
+                {
+                    "name": "unknown_0",
+                    "shape": [3, 3, 3, 32],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_1",
+                    "shape": [32],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_2",
+                    "shape": [3, 3, 32, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_3",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_4",
+                    "shape": [2, 2, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_5",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_6",
+                    "shape": [3, 3, 64, 128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_7",
+                    "shape": [128],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_8",
+                    "shape": [3, 3, 128, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_9",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.reduce_mean/Mean/reduction_indices",
+                    "shape": [2],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "unknown_10",
+                    "shape": [1, 1, 64, 8],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_11",
+                    "shape": [8],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_12",
+                    "shape": [1, 1, 8, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_13",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.add_9/Add/y",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_18",
+                    "shape": [3, 3, 64, 64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "unknown_19",
+                    "shape": [64],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.math.add_13/Add/y",
+                    "shape": [3],
+                    "dtype": "float32",
+                    "quantization": {
+                        "dtype": "float16",
+                        "original_dtype": "float32"
+                    }
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice/begin",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.strided_slice_1/StridedSlice/end",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                {
+                    "name": "PartitionedCall/model_2/tf.strided_slice_1/ones_like",
+                    "shape": [4],
+                    "dtype": "int32"
+                },
+                { "name": "unknown_63", "shape": [4], "dtype": "int32" },
+                { "name": "unknown_64", "shape": [4], "dtype": "int32" },
+                {
+                    "name": "PartitionedCall/model_2/tf.strided_slice_2/ones_like",
+                    "shape": [4],
+                    "dtype": "int32"
+                }
+            ]
+        }
+    ]
+}
