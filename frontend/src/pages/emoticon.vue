@@ -181,6 +181,7 @@ import { useRoute, useRouter } from 'vue-router';
 import wretch from 'wretch';
 import NMdi from '../components/mdi.vue';
 import formatSize from '../format-size';
+import { buffer2image, raw2buffer, raw2image } from '../image-convert';
 
 const route = useRoute();
 const router = useRouter();
@@ -255,13 +256,6 @@ const convertLoading = ref(false);
 const convertProgressCurrent = ref(0);
 const convertProgressTotal = ref(0);
 
-const convertModulesCached: {
-    // biome-ignore lint/suspicious/noExplicitAny: explanation
-    img2webpInstance?: any;
-    // biome-ignore lint/suspicious/noExplicitAny: explanation
-    gif2webpInstance?: any;
-} = {};
-
 const convertDownload = async (
     pngUpscale: UpscaleMode,
     gifUpscale: UpscaleMode,
@@ -321,7 +315,7 @@ const convertDownload = async (
             !(await window.chiya.dialog.confirm({
                 title: '提示',
                 content:
-                    '转换为 WebP 需要较长时间，在此期间浏览器可能会卡住，转换完成前请耐心等待。是否继续？',
+                    '转换为 WebP 需要较长时间，转换完成前请耐心等待。是否继续？',
             }))
         )
             return;
@@ -363,15 +357,8 @@ const convertDownload = async (
                           const upscale = await import(
                               '../web-realesrgan'
                           ).then(e => e.default);
-                          const image = await new Promise<HTMLImageElement>(
-                              (resolve, reject) => {
-                                  const img = new Image();
-                                  img.onload = () => resolve(img);
-                                  img.onerror = reject;
-                                  img.src = URL.createObjectURL(
-                                      new Blob([data.buffer as ArrayBuffer]),
-                                  );
-                              },
+                          const image = await buffer2image(
+                              data.buffer as ArrayBuffer,
                           );
                           // @ts-expect-error
                           return upscale(image, {
@@ -388,21 +375,8 @@ const convertDownload = async (
                         const gifEncode = await import('modern-gif').then(
                             e => e.encode,
                         );
-
-                        const image = await new Promise<HTMLImageElement>(
-                            (resolve, reject) => {
-                                const image = new Image();
-                                image.onload = () => {
-                                    URL.revokeObjectURL(image.src);
-                                    resolve(image);
-                                };
-                                image.onerror = reject;
-                                image.src = URL.createObjectURL(
-                                    new Blob([
-                                        dataUpscaled.buffer as ArrayBuffer,
-                                    ]),
-                                );
-                            },
+                        const image = await buffer2image(
+                            dataUpscaled.buffer as ArrayBuffer,
                         );
                         converted[path.replace(/\.png$/g, '.gif')] =
                             await gifEncode({
@@ -416,112 +390,48 @@ const convertDownload = async (
                     }
                     case 'webp-lossless':
                     case 'webp-lossy': {
-                        const {
-                            initFS,
-                            Img2Webp,
-                            runImg2Webp,
-                            initLocateFile,
-                            getFileWithBlobData,
-                            writeFileWithUint8ArrayData,
-                        } =
-                            // @ts-expect-error
-                            await import('@libwebp-wasm/img2webp');
-                        if (!convertModulesCached.img2webpInstance) {
-                            const img2webp = await import(
-                                '@libwebp-wasm/img2webp/lib/img2webp.wasm?url'
-                            ).then(e => e.default);
-                            convertModulesCached.img2webpInstance =
-                                await Img2Webp(initLocateFile(img2webp));
-                            initFS(
-                                convertModulesCached.img2webpInstance,
-                                '/img2webp',
-                            );
-                        }
-                        const { img2webpInstance } = convertModulesCached;
-
-                        // biome-ignore lint/style/noNonNullAssertion: explanation
-                        const filename = path.split('/').pop()!;
-                        const output = filename.replace(/\.png$/g, '.webp');
-                        writeFileWithUint8ArrayData(
-                            img2webpInstance,
-                            filename,
-                            dataUpscaled,
+                        const img2webp = await import('../img2webp').then(
+                            e => e.default,
                         );
-                        runImg2Webp(
-                            img2webpInstance,
-                            '_main',
-                            '-min_size',
-                            '-sharp_yuv',
-                            '-m',
-                            '4',
-                            ...{
-                                'webp-lossless': ['-lossless'],
-                                'webp-lossy': ['-lossy', '-q', '80'],
-                            }[pngMode],
-                            filename,
-                            '-o',
-                            output,
-                        );
-                        converted[path.replace(/\.png$/g, '.webp')] = await (
-                            getFileWithBlobData(
-                                img2webpInstance,
-                                output,
-                            ) as Blob
-                        )
-                            .arrayBuffer()
-                            .then(r => new Uint8Array(r));
+                        converted[path.replace(/\.png$/g, '.webp')] =
+                            await img2webp({
+                                minSize: true,
+                                sharpYUV: true,
+                                frames: [
+                                    {
+                                        frame: dataUpscaled.buffer as ArrayBuffer,
+                                        lossless: pngMode === 'webp-lossless',
+                                        quality: 80,
+                                        compression: 4,
+                                    },
+                                ],
+                            }).then(e => new Uint8Array(e));
                         break;
                     }
                     default:
                         converted[path] = dataUpscaled;
                 }
             } else if (path.match(/\/emoticon\/.*?\.gif$/gi)) {
-                const dataUpscaled = gifUpscaleConfig
+                const framesUpscaled = gifUpscaleConfig
                     ? await (async () => {
-                          const [upscale, [gifEncode, gifDecodeFrames]] =
-                              await Promise.all([
-                                  import('../web-realesrgan').then(
-                                      e => e.default,
-                                  ),
-                                  import('modern-gif').then(
-                                      e =>
-                                          [e.encode, e.decodeFrames] as [
-                                              typeof import('modern-gif').encode,
-                                              typeof import('modern-gif').decodeFrames,
-                                          ],
-                                  ),
-                              ]);
+                          const [upscale, gifDecodeFrames] = await Promise.all([
+                              import('../web-realesrgan').then(e => e.default),
+                              import('modern-gif').then(e => e.decodeFrames),
+                          ]);
                           const frames = gifDecodeFrames(
                               data.buffer as ArrayBuffer,
                           );
-                          const framesUpscaled = [] as UnencodedFrame[];
+                          const framesUpscaled = [] as (Omit<
+                              UnencodedFrame,
+                              'data'
+                          > & { data: ArrayBuffer })[];
                           for (const frame of frames) {
-                              const canvas = new OffscreenCanvas(
-                                  frame.width,
-                                  frame.height,
-                              );
-                              // biome-ignore lint/style/noNonNullAssertion: explanation
-                              const ctx = canvas.getContext('2d')!;
-                              ctx.putImageData(
+                              const image = await raw2image(
                                   new ImageData(
                                       frame.data as Uint8ClampedArray<ArrayBuffer>,
                                       frame.width,
                                       frame.height,
                                   ),
-                                  0,
-                                  0,
-                              );
-                              const blob = await canvas.convertToBlob();
-                              const image = await new Promise<HTMLImageElement>(
-                                  (resolve, reject) => {
-                                      const image = new Image();
-                                      image.onload = () => {
-                                          URL.revokeObjectURL(image.src);
-                                          resolve(image);
-                                      };
-                                      image.onerror = reject;
-                                      image.src = URL.createObjectURL(blob);
-                                  },
                               );
                               // @ts-expect-error
                               const frameUpscaled = await upscale(image, {
@@ -529,86 +439,80 @@ const convertDownload = async (
                                   timeLabel: path,
                               });
                               framesUpscaled.push({
-                                  data: await frameUpscaled.toImage(),
+                                  data: await frameUpscaled
+                                      .toBlob()
+                                      .then(e => e.arrayBuffer()),
                                   width: frameUpscaled.width,
                                   height: frameUpscaled.height,
                                   delay: frame.delay,
                               });
                           }
-
-                          return await gifEncode({
-                              width:
-                                  // biome-ignore lint/style/noNonNullAssertion: explanation
-                                  framesUpscaled[0]!.width!,
-                              height:
-                                  // biome-ignore lint/style/noNonNullAssertion: explanation
-                                  framesUpscaled[0]!.height!,
-                              frames: framesUpscaled,
-                              dither: 'floyd-steinberg',
-                              ditherTransparency: 'stucki',
-                          }).then(e => new Uint8Array(e));
+                          return framesUpscaled;
                       })()
-                    : data;
+                    : await (async () => {
+                          const gifDecodeFrames = await import(
+                              'modern-gif'
+                          ).then(e => e.decodeFrames);
+                          const frames = [] as (Omit<UnencodedFrame, 'data'> & {
+                              data: ArrayBuffer;
+                          })[];
+                          for (const frame of gifDecodeFrames(
+                              data.buffer as ArrayBuffer,
+                          )) {
+                              frames.push({
+                                  data: await raw2buffer(
+                                      new ImageData(
+                                          frame.data as Uint8ClampedArray<ArrayBuffer>,
+                                          frame.width,
+                                          frame.height,
+                                      ),
+                                  ),
+                                  width: frame.width,
+                                  height: frame.height,
+                                  delay: frame.delay,
+                              });
+                          }
+                          return frames;
+                      })();
                 switch (gifMode) {
                     case 'webp-lossy': {
-                        const {
-                            initFS,
-                            Gif2Webp,
-                            runGif2Webp,
-                            initLocateFile,
-                            getFileWithBlobData,
-                            writeFileWithUint8ArrayData,
-                        } =
-                            // @ts-expect-error
-                            await import('@libwebp-wasm/gif2webp');
-                        if (!convertModulesCached.gif2webpInstance) {
-                            const gif2webp = await import(
-                                '@libwebp-wasm/gif2webp/lib/gif2webp.wasm?url'
-                            ).then(e => e.default);
-                            convertModulesCached.gif2webpInstance =
-                                await Gif2Webp(initLocateFile(gif2webp));
-                            initFS(
-                                convertModulesCached.gif2webpInstance,
-                                '/gif2webp',
-                            );
-                        }
-                        const { gif2webpInstance } = convertModulesCached;
+                        const img2webp = await import('../img2webp').then(
+                            e => e.default,
+                        );
+                        converted[path.replace(/\.gif$/g, '.webp')] =
+                            await img2webp({
+                                minSize: true,
+                                sharpYUV: true,
+                                frames: framesUpscaled.map(e => ({
+                                    frame: e.data,
+                                    // biome-ignore lint/style/noNonNullAssertion: explanation
+                                    delay: e.delay! * 10,
+                                    quality: 80,
+                                    compression: 4,
+                                })),
+                            }).then(e => new Uint8Array(e));
 
-                        // biome-ignore lint/style/noNonNullAssertion: explanation
-                        const filename = path.split('/').pop()!;
-                        const output = filename.replace(/\.gif$/g, '.webp');
-                        writeFileWithUint8ArrayData(
-                            gif2webpInstance,
-                            filename,
-                            dataUpscaled,
-                        );
-                        runGif2Webp(
-                            gif2webpInstance,
-                            '_main',
-                            '-min_size',
-                            '-sharp_yuv',
-                            '-mt',
-                            '-lossy',
-                            '-m',
-                            '4',
-                            '-q',
-                            '80',
-                            filename,
-                            '-o',
-                            output,
-                        );
-                        converted[path.replace(/\.gif$/g, '.webp')] = await (
-                            getFileWithBlobData(
-                                gif2webpInstance,
-                                output,
-                            ) as Blob
-                        )
-                            .arrayBuffer()
-                            .then(r => new Uint8Array(r));
                         break;
                     }
                     default:
-                        converted[path] = dataUpscaled;
+                        converted[path] = framesUpscaled
+                            ? await (async () => {
+                                  const gifEncode = await import(
+                                      'modern-gif'
+                                  ).then(e => e.encode);
+                                  return await gifEncode({
+                                      width:
+                                          // biome-ignore lint/style/noNonNullAssertion: explanation
+                                          framesUpscaled[0]!.width!,
+                                      height:
+                                          // biome-ignore lint/style/noNonNullAssertion: explanation
+                                          framesUpscaled[0]!.height!,
+                                      frames: framesUpscaled,
+                                      dither: 'floyd-steinberg',
+                                      ditherTransparency: 'stucki',
+                                  }).then(e => new Uint8Array(e));
+                              })()
+                            : data;
                 }
             } else {
                 converted[path] = data;

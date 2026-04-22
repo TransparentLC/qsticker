@@ -9,7 +9,6 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@libwebp-wasm/gif2webp": "^1.0.8",
         "@libwebp-wasm/img2webp": "^1.0.0",
         "@mdi/js": "^7.4.47",
         "@tensorflow/tfjs": "^4.22.0",
@@ -23,7 +22,6 @@
         "wretch": "^3.0.7"
     },
     "devDependencies": {
-        "@types/gif.js": "^0.2.5",
         "@types/throttle-debounce": "^5.0.2",
         "@vitejs/plugin-vue": "^6.0.5",
         "@vitejs/plugin-vue-jsx": "^5.1.5",
