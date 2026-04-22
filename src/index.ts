@@ -67,7 +67,16 @@ app.use(logger)
         }),
     )
     .get('/docs', Scalar({ url: 'openapi.json', withDefaultFonts: false }))
-    .use(serveStatic({ root: './public' }));
+    .use(
+        serveStatic({
+            root: './public',
+            onFound: (_, ctx) => {
+                if (ctx.req.path.match(/^\/upscale-models\/.+?\.bin$/)) {
+                    ctx.header('Cache-Control', 'public, max-age=604800');
+                }
+            },
+        }),
+    );
 
 if (
     typeof config.server.port === 'string' &&
