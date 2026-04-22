@@ -58,6 +58,15 @@ export default defineConfig({
             },
         }),
     ],
+    worker: {
+        rolldownOptions: {
+            output: {
+                entryFileNames: 'assets/[hash].js',
+                chunkFileNames: 'assets/[hash].js',
+                assetFileNames: 'assets/[hash].[ext]',
+            },
+        },
+    },
     build: {
         outDir: '../public',
         emptyOutDir: true,
@@ -65,7 +74,7 @@ export default defineConfig({
         minify: 'oxc',
         cssMinify: 'lightningcss',
         target: 'esnext',
-        rollupOptions: {
+        rolldownOptions: {
             plugins: [
                 visualizer({
                     gzipSize: true,
