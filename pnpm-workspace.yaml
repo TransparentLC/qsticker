@@ -1,2 +1,12 @@
+allowBuilds:
+  better-sqlite3: true
+  core-js: true
+  esbuild: true
+  lefthook: true
 patchedDependencies:
   "@types/adm-zip": patches/@types__adm-zip.patch
+packages:
+  - frontend
+minimumReleaseAgeExclude:
+  - '@hono/node-server@2.1.0'
+  - hono@4.13.0
