@@ -2,6 +2,14 @@ import { createApp } from 'vue';
 import app from './app.vue';
 import router from './router';
 
+if (new URL(location.href).searchParams.get('eruda') !== null) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+    // @ts-expect-error
+    script.onload = () => window.eruda.init();
+    document.body.append(script);
+}
+
 createApp(app).use(router).mount('#app');
 
 const consoleBadge = (label: string, content: string, color: string) =>
