@@ -1,4 +1,3 @@
-// biome-ignore lint/correctness/noUnusedVariables: no reason
 interface Window {
     chiya: {
         dialog: import('naive-ui').DialogProviderInst & {
@@ -16,5 +15,4 @@ interface Window {
     };
 }
 
-// biome-ignore lint/correctness/noUnusedVariables: no reason
 type EmoticonSource = 'qq' | 'bilibili';
