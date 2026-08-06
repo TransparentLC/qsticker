@@ -6,6 +6,7 @@ type Config = {
         host: string;
         port: number;
         base: string;
+        corsOrigin: string[] | boolean;
     };
     optimize: {
         png: {

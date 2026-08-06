@@ -4,6 +4,10 @@ server:
   # 也可以使用 Unix Socket
   # port: /var/run/crypto-lab.sock
   base: /
+  # 允许跨域的域名
+  # 也可以使用 true 表示 *，false 表示不允许跨域
+  corsOrigin:
+    - https://example.com
 # 是否对下载的表情包进行无损压缩
 optimize:
   png:
