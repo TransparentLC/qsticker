@@ -167,7 +167,7 @@
         <n-button
             tertiary
             block
-            @click="router.push('/')"
+            @click="$router.push('/')"
         >返回</n-button>
     </n-flex>
 </template>
@@ -177,14 +177,13 @@ import { mdiDownload, mdiTriangleSmallDown } from '@mdi/js';
 import type { Unzipped } from 'fflate';
 import type { UnencodedFrame } from 'modern-gif';
 import { onMounted, ref, shallowRef, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import wretch from 'wretch';
 import NMdi from '../components/mdi.vue';
 import formatSize from '../format-size';
 import { buffer2image, raw2buffer, raw2image } from '../image-convert';
 
 const route = useRoute();
-const router = useRouter();
 const loading = ref(false);
 
 const name = ref('');
