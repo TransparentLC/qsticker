@@ -16,7 +16,21 @@ if (!fs.existsSync('storage')) fs.mkdirSync('storage');
 const app = new Hono<HonoSchema>().basePath(config.server.base);
 const appLogger = createLogger('app');
 
-app.use(logger)
+app
+    // `c.req.url` is always http · Issue #146 · honojs/node-server
+    // https://github.com/honojs/node-server/issues/146#issuecomment-2661406746
+    // FIXME: 文档中给出的修改 serve({ fetch: ... }) 的方法会出现 500 错误，不知道怎么回事
+    // https://hono.dev/examples/behind-reverse-proxy#node-js
+    .use(async (ctx, next) => {
+        const url = new URL(ctx.req.url);
+        url.protocol = ctx.req.header('x-forwarded-proto') ?? url.protocol;
+        Object.defineProperty(ctx.req, 'url', {
+            value: url.toString(),
+            configurable: true,
+        });
+        await next();
+    })
+    .use(logger)
     .onError((err, ctx) => {
         let statusCode = (err as HTTPResponseError).getResponse?.()
             .status as ContentfulStatusCode;
@@ -86,11 +100,7 @@ if (
 }
 
 serve({
-    fetch: (req, env) => {
-        const url = new URL(req.url);
-        url.protocol = req.headers.get('x-forwarded-proto') ?? url.protocol;
-        return app.fetch(new Request(url, req), env);
-    },
+    fetch: app.fetch,
     hostname: config.server.host,
     port: config.server.port,
 });
